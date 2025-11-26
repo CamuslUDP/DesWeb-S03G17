@@ -3,23 +3,18 @@
 //-------------------------------------------
 function esFechaVencimientoValida(expStr) {
   if (!/^\d{2}\/\d{2}$/.test(expStr)) return false;
-
   const [mesStr, anioStr] = expStr.split("/");
   const mes = Number(mesStr);
   const anio = 2000 + Number(anioStr);
-
   if (mes < 1 || mes > 12) return false;
   if (anio < 2000 || anio > 2099) return false;
-
   if (anio > 2025) return true;
   if (anio === 2025 && mes >= 12) return true;
-
   return false;
 }
 
 function configurarAutoFormatoExpiracion(input) {
   if (!input) return;
-
   input.addEventListener("input", () => {
     let v = input.value.replace(/\D/g, "");
     if (v.length > 4) v = v.slice(0, 4);
@@ -34,23 +29,17 @@ function configurarAutoFormatoExpiracion(input) {
 function mostrarModalConfirmacion(texto, callbackAceptar) {
   const overlay = document.createElement("div");
   overlay.className = "overlay-confirmacion";
-
   const modal = document.createElement("div");
   modal.className = "modal-confirmacion";
-
   const titulo = document.createElement("h3");
   titulo.textContent = "Confirmación";
-
   const msg = document.createElement("p");
   msg.textContent = texto;
-
   const btns = document.createElement("div");
   btns.className = "modal-botones";
-
   const ok = document.createElement("button");
   ok.className = "btn-confirmar";
   ok.textContent = "Aceptar";
-
   const no = document.createElement("button");
   no.className = "btn-cancelar";
   no.textContent = "Cancelar";
@@ -59,18 +48,13 @@ function mostrarModalConfirmacion(texto, callbackAceptar) {
     callbackAceptar();
     document.body.removeChild(overlay);
   });
-
-  no.addEventListener("click", () => {
-    document.body.removeChild(overlay);
-  });
+  no.addEventListener("click", () => document.body.removeChild(overlay));
 
   btns.appendChild(ok);
   btns.appendChild(no);
-
   modal.appendChild(titulo);
   modal.appendChild(msg);
   modal.appendChild(btns);
-
   overlay.appendChild(modal);
   document.body.appendChild(overlay);
 }
@@ -90,10 +74,8 @@ function guardarHistorial(lista) {
 function agregarTransaccion(tipo, monto) {
   const hoy = new Date();
   const fecha = hoy.toLocaleDateString("es-CL");
-
   const historial = obtenerHistorial();
   historial.push({ fecha, tipo, monto });
-
   guardarHistorial(historial);
   mostrarHistorial();
 }
@@ -101,43 +83,25 @@ function agregarTransaccion(tipo, monto) {
 function mostrarHistorial() {
   const historial = obtenerHistorial();
   const tabla = document.getElementById("tablaHistorial");
+  if (!tabla) return;
   tabla.innerHTML = "";
-
   const ultimos = historial.slice(-10).reverse();
 
   ultimos.forEach((item) => {
     const tr = document.createElement("tr");
-
     const tdF = document.createElement("td");
     tdF.textContent = item.fecha;
-
     const tdT = document.createElement("td");
     tdT.textContent = item.tipo;
-
     const tdM = document.createElement("td");
     tdM.classList.add("text-right");
-
-    tdM.textContent =
-      (item.tipo === "Ingreso" ? "+ $ " : "- $ ") +
-      item.monto.toLocaleString("es-CL");
-
+    tdM.textContent = (item.tipo === "Ingreso" ? "+ $ " : "- $ ") + item.monto.toLocaleString("es-CL");
     tdM.style.color = item.tipo === "Ingreso" ? "lightgreen" : "red";
-
     tr.appendChild(tdF);
     tr.appendChild(tdT);
     tr.appendChild(tdM);
     tabla.appendChild(tr);
   });
-
-  const cont = document.getElementById("historialContenedor");
-
-  if (historial.length > 10) {
-    cont.style.maxHeight = "300px";
-    cont.style.overflowY = "scroll";
-  } else {
-    cont.style.maxHeight = "none";
-    cont.style.overflowY = "hidden";
-  }
 }
 
 //-------------------------------------------
@@ -146,13 +110,9 @@ function mostrarHistorial() {
 function mostrarOperacionExitosa() {
   const mensajeOperacion = document.getElementById("mensaje-operacion");
   if (!mensajeOperacion) return;
-
   mensajeOperacion.textContent = "Operación exitosa";
   mensajeOperacion.classList.remove("oculto");
-
-  setTimeout(() => {
-    mensajeOperacion.classList.add("oculto");
-  }, 2500);
+  setTimeout(() => mensajeOperacion.classList.add("oculto"), 2500);
 }
 
 //-------------------------------------------
@@ -161,13 +121,10 @@ function mostrarOperacionExitosa() {
 function redondearMonto(valorStr) {
   const texto = valorStr.trim();
   if (texto === "") return NaN;
-
   let v = Number(texto);
   if (!Number.isFinite(v) || v <= 0) return NaN;
-
   if (v < 1000) v = 1000;
   v = Math.round(v / 100) * 100;
-
   return v;
 }
 
@@ -175,8 +132,7 @@ function configurarRedondeoEnBlur(input) {
   if (!input) return;
   input.addEventListener("blur", () => {
     const valorActual = input.value.trim();
-    if (valorActual === "") return; // campo vacío se mantiene vacío
-
+    if (valorActual === "") return;
     const monto = redondearMonto(valorActual);
     if (!Number.isFinite(monto)) {
       input.value = "";
@@ -191,21 +147,25 @@ function configurarRedondeoEnBlur(input) {
 //-------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
 
-  //-------------------------------------------
-  //  SALDO
-  //-------------------------------------------
-  let saldo = Number(localStorage.getItem("saldo"));
-  if (isNaN(saldo)) {
-    saldo = 0;
-    localStorage.setItem("saldo", saldo);
+  function obtenerSaldoTotal() {
+      let s = Number(localStorage.getItem("saldo"));
+      return isNaN(s) ? 0 : s;
   }
 
   const saldoElem = document.getElementById("saldo-actual");
-  const actualizarSaldo = () => {
-    saldoElem.textContent =
-      "Saldo actual: $" + saldo.toLocaleString("es-CL") + " CLP";
+  const actualizarSaldoDisplay = () => {
+    const saldo = obtenerSaldoTotal();
+    saldoElem.textContent = "Saldo actual: $" + saldo.toLocaleString("es-CL") + " CLP";
   };
-  actualizarSaldo();
+  
+  // Sincronizar saldo si cambia en otra pestaña
+  window.addEventListener("storage", (event) => {
+      if (event.key === "saldo") {
+          actualizarSaldoDisplay();
+      }
+  });
+
+  actualizarSaldoDisplay();
   mostrarHistorial();
 
   //-------------------------------------------
@@ -229,11 +189,8 @@ document.addEventListener("DOMContentLoaded", () => {
   //-------------------------------------------
   const inpExp = document.getElementById("expiracion");
   configurarAutoFormatoExpiracion(inpExp);
-
   const inpDepMonto = document.getElementById("monto-deposito");
   const inpRetMonto = document.getElementById("retiro-monto");
-
-  // redondeo al salir del campo (después de escribir)
   configurarRedondeoEnBlur(inpDepMonto);
   configurarRedondeoEnBlur(inpRetMonto);
 
@@ -241,40 +198,27 @@ document.addEventListener("DOMContentLoaded", () => {
   //  DEPÓSITO
   //-------------------------------------------
   const formDep = document.getElementById("form-deposito");
-
   formDep.addEventListener("submit", (e) => {
     e.preventDefault();
-
     const nombre = document.getElementById("nombre-titular").value.trim();
-    const tarjeta = document
-      .getElementById("numero-tarjeta")
-      .value.replace(/\s+/g, "");
+    const tarjeta = document.getElementById("numero-tarjeta").value.replace(/\s+/g, "");
     const exp = inpExp.value.trim();
     const cvv = document.getElementById("cvv").value.trim();
-
-    // normalizar / redondear monto en el submit también
     const montoRedondeado = redondearMonto(inpDepMonto.value);
     const monto = montoRedondeado;
-    if (Number.isFinite(montoRedondeado)) {
-      inpDepMonto.value = montoRedondeado;
-    }
+    if (Number.isFinite(montoRedondeado)) inpDepMonto.value = montoRedondeado;
 
     const err = document.getElementById("mensaje-error");
     const ok = document.getElementById("mensaje-exito");
-
     err.textContent = "";
     ok.textContent = "";
     const errores = [];
 
     if (!nombre) errores.push("Ingrese nombre del titular.");
-    if (!/^\d{16}$/.test(tarjeta))
-      errores.push("La tarjeta debe tener 16 dígitos.");
-    if (!esFechaVencimientoValida(exp))
-      errores.push("Fecha de expiración inválida.");
+    if (!/^\d{16}$/.test(tarjeta)) errores.push("La tarjeta debe tener 16 dígitos.");
+    if (!esFechaVencimientoValida(exp)) errores.push("Fecha de expiración inválida.");
     if (!/^\d{3}$/.test(cvv)) errores.push("CVV inválido.");
-
-    if (!Number.isFinite(monto) || monto < 1000)
-      errores.push("Monto inválido, mínimo $1.000 (se redondea al múltiplo de 100 más cercano).");
+    if (!Number.isFinite(monto) || monto < 1000) errores.push("Monto inválido, mínimo $1.000.");
 
     if (errores.length > 0) {
       err.textContent = errores.join(" ");
@@ -284,9 +228,11 @@ document.addEventListener("DOMContentLoaded", () => {
     mostrarModalConfirmacion(
       "¿Está seguro de cargar un monto de $" + monto.toLocaleString("es-CL") + "?",
       () => {
+        // Depósito: Siempre suma, no hay restricción de bloqueo
+        let saldo = obtenerSaldoTotal();
         saldo += monto;
         localStorage.setItem("saldo", saldo);
-        actualizarSaldo();
+        actualizarSaldoDisplay();
         agregarTransaccion("Ingreso", monto);
         ok.textContent = "Depósito realizado.";
         formDep.reset();
@@ -297,38 +243,41 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   //-------------------------------------------
-  //  RETIRO
+  //  RETIRO (CON VALIDACIÓN ESCENARIO B)
   //-------------------------------------------
   const formRet = document.getElementById("form-retiro");
-
   formRet.addEventListener("submit", (e) => {
     e.preventDefault();
-
     const nombre = document.getElementById("retiro-nombre").value.trim();
     const cuenta = document.getElementById("retiro-cuenta").value.trim();
     const banco = document.getElementById("retiro-banco").value.trim();
-
     const montoRedondeado = redondearMonto(inpRetMonto.value);
     const monto = montoRedondeado;
-    if (Number.isFinite(montoRedondeado)) {
-      inpRetMonto.value = montoRedondeado;
-    }
+    if (Number.isFinite(montoRedondeado)) inpRetMonto.value = montoRedondeado;
 
     const err = document.getElementById("mensaje-retiro-error");
     const ok = document.getElementById("mensaje-retiro-exito");
     err.textContent = "";
     ok.textContent = "";
-
     const errores = [];
 
     if (!nombre) errores.push("Ingrese el nombre del titular.");
     if (!cuenta) errores.push("Ingrese el número de cuenta.");
     if (!banco) errores.push("Seleccione un banco.");
+    if (!Number.isFinite(monto) || monto < 1000) errores.push("Monto inválido.");
 
-    if (!Number.isFinite(monto) || monto < 1000)
-      errores.push("Monto inválido, mínimo $1.000 (se redondea al múltiplo de 100 más cercano).");
+    // --- VALIDACIÓN DE FONDOS BLOQUEADOS POR RULETA ---
+    const saldo = obtenerSaldoTotal();
+    const dineroEnJuego = Number(localStorage.getItem("montoEnJuego") || 0);
+    const saldoDisponibleReal = saldo - dineroEnJuego; // Escenario B
 
-    if (monto > saldo) errores.push("Saldo insuficiente.");
+    if (monto > saldoDisponibleReal) {
+        if (dineroEnJuego > 0) {
+            errores.push(`Saldo insuficiente. Hay $${dineroEnJuego.toLocaleString("es-CL")} retenidos en una jugada activa.`);
+        } else {
+            errores.push("Saldo insuficiente.");
+        }
+    }
 
     if (errores.length > 0) {
       err.textContent = errores.join(" ");
@@ -338,9 +287,11 @@ document.addEventListener("DOMContentLoaded", () => {
     mostrarModalConfirmacion(
       "¿Estás seguro de querer retirar $" + monto.toLocaleString("es-CL") + "?",
       () => {
-        saldo -= monto;
-        localStorage.setItem("saldo", saldo);
-        actualizarSaldo();
+        // Volvemos a leer saldo por seguridad dentro del callback
+        let s = obtenerSaldoTotal();
+        s -= monto;
+        localStorage.setItem("saldo", s);
+        actualizarSaldoDisplay();
         agregarTransaccion("Retiro", monto);
         ok.textContent = "Retiro completado.";
         formRet.reset();

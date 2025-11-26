@@ -17,7 +17,7 @@ html, body { height: 100%; }
 body{
   margin:0;
   color:#f2f2f2;
-  background: #000 url("../fotos/fondo.png") center/cover fixed no-repeat;
+  background: #000 url("../fotos/fondo3.png") center/cover fixed no-repeat;
   font-family: "Georgia", "Times New Roman", serif;
   padding-top: 90px;
   line-height:1.5;
@@ -651,7 +651,6 @@ html{scroll-behavior:smooth}
 .btn-deposito:active{ transform: translateY(1px); }
 
 
-
 /*--------------------
 |  Reglas del juego  |
 --------------------*/
@@ -661,7 +660,9 @@ html{scroll-behavior:smooth}
   font-weight: 800;
   color: #f58220;
 }
-
+.rules-text{
+  font-size: 1.3rem;
+}
 .rules-list{
   margin: 0 0 8px 0;
   padding-left: 18px;
@@ -686,30 +687,102 @@ html{scroll-behavior:smooth}
 /* Contenedor principal */
 .arena-wrap{
   padding:110px 16px 40px;
+  display: flex; 
+  flex-direction: column; /* Cambiado a columna para que el historial quede abajo */
+  align-items: center; /* Centrar el contenido */
 }
 
 /* ============================
-   BLOQUE PRINCIPAL (1300px)
+   LAYOUT 3 COLUMNAS (CONTENEDOR DEL JUEGO)
+   ============================ */
+.game-layout-container {
+    display: flex;
+    gap: 30px;
+    width: 100%;
+    max-width: 1600px;
+    align-items: flex-start;
+}
+
+
+/* ============================
+   CUADRO IZQUIERDO: APUESTAS ACTIVAS (PINK AREA)
+   ============================ */
+.active-bets-panel {
+    width: 300px;
+    flex-shrink: 0;
+    background: rgba(43, 43, 43, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.4);
+    /* NEW: Quitamos el min-height fijo, ya que ahora el scroll lo manejará la lista */
+    min-height: auto; 
+}
+
+.active-bets-panel h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.5rem;
+    color: var(--gold);
+    text-align: center;
+    border-bottom: 2px solid rgba(245, 130, 32, 0.3);
+    padding-bottom: 8px;
+}
+
+#apuestas-activas-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 1.1rem;
+
+    /* CAMBIOS CLAVE PARA EL SCROLL: */
+    max-height: 460px; /* NEW: Altura máxima para unas 16-18 apuestas (ajustar según tu diseño) */
+    overflow-y: auto;   /* NEW: Habilita el scroll vertical cuando excede la altura */
+    padding-right: 8px; /* NEW: Añade un pequeño padding para que la barra de scroll no toque el borde */
+
+    /* Estilo para la barra de scroll (opcional, para un mejor look de casino) */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(245, 130, 32, 0.5) #333; /* dorado tenue sobre oscuro */
+}
+
+/* Estilos de los ítems de la lista */
+#apuestas-activas-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+#apuestas-activas-list li:last-child {
+    border-bottom: none;
+}
+
+.bet-label { font-weight: 500; }
+.bet-amount { color: #31d16b; font-weight: 700; }
+
+
+/* ============================
+   BLOQUE PRINCIPAL (CENTRAL)
    ============================ */
 #bloque-ruleta {
-  width: 1300px;
-  margin: 0 auto;
+  width: 100%; 
+  max-width: 1000px; 
+  margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 22px;
 }
 
-/* ============================
-   RULETA (CENTRO)
-   ============================ */
-#ruleta-centro {
-  width: 1300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* Ajuste para que los hijos se adapten al nuevo ancho */
+#ruleta-centro,
+.barra-superior-apuestas,
+#spin-right,
+#fichas-bar,
+#board-wrap {
+    width: 100%;
 }
 
+/* ... (Resto de estilos de ruleta, wheel-slot, etc. quedan igual) ... */
 .wheel-slot { display: flex; justify-content: center; }
 .wheel-wrap-img {
   position: relative;
@@ -722,25 +795,24 @@ html{scroll-behavior:smooth}
 .wheel-inner {
   position:absolute;
   left:50%; top:50%;
-  transform:translate(-50%,-50%);
+  transform:translate(-50%,-51.4%) rotate(0deg);
   width:78%; height:78%;
 }
 .pointer{
   position:absolute;
-  top:-6px;
+  top:5px;
   left:50%;
-  transform:translateX(-50%);
-  width:0;height:0;
+  transform:translateX(-50%) rotate(180deg);
+  width:6%; height:6%;
   border-left:14px solid transparent;
   border-right:14px solid transparent;
-  border-bottom:24px solid var(--gold);
+  border-bottom:24px solid #e6e6e6;
 }
 
 /* ============================
    ZONA BOTONES + SALDO
    ============================ */
 .barra-superior-apuestas {
-  width: 1300px;
   margin: 10px auto 10px auto;
   display: flex;
   align-items: center;
@@ -748,7 +820,6 @@ html{scroll-behavior:smooth}
 }
 
 #spin-right {
-  width: 1300px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -779,13 +850,13 @@ html{scroll-behavior:smooth}
 
 
 /* ------------------------------ */
-/*  VIÑETA SALDO DISPONIBLE      */
+/* VIÑETA SALDO DISPONIBLE      */
 /* ------------------------------ */
 .saldo-box {
   flex: 1;
-  max-width: 300px;             /* ancho tipo botón */
+  max-width: 300px;
   text-align: center;
-  background: #0f3b10;          /* verde oscuro */
+  background: #0f3b10;
   color: #fff;
   padding: 16px 0;
   border-radius: 10px;
@@ -829,8 +900,11 @@ html{scroll-behavior:smooth}
 /* ============================
    FICHAS
    ============================ */
+/* ============================
+   FICHAS
+   ============================ */
 #fichas-bar {
-  width: 1300px;
+  width: 100%; /* o 1300px si quieres volver al ancho fijo original */
   display: flex;
   justify-content: center;
   gap: 18px;
@@ -843,11 +917,40 @@ html{scroll-behavior:smooth}
   width: 85px;
   height: 85px;
   flex: 0 0 auto;
-  cursor: grab;
+  cursor: pointer; /* Cambiado de grab a pointer */
   user-select: none;
+  border-radius: 50%; /* Aseguramos el círculo */
+  transition: transform 0.15s ease, box-shadow 0.15s ease; /* Transición suave */
 }
 
-.chip img { width: 100%; height: 100%; }
+/* NUEVO: Ficha seleccionada (resaltado con borde dorado y aumento de tamaño) */
+.chip.selected {
+    box-shadow: 0 0 0 4px var(--gold), 0 0 15px rgba(245, 130, 32, 0.8);
+    transform: scale(1.1);
+}
+
+.chip img { 
+  width: 100%; 
+  height: 100%; 
+  /* Aseguramos que la imagen no tenga transformaciones que distorsionen el tamaño base */
+  transform: none; 
+}
+
+/* Estilo de la ficha colocada en el tablero (Clon de la ficha) */
+.placed-chip {
+    position: absolute; /* Asegurado en el JS, pero por si acaso */
+    width: 85px; /* Usamos el tamaño base */
+    height: 85px;
+    user-select: none;
+    pointer-events: auto;
+    /* La transformación se aplica a todo el elemento en JS */
+}
+/* Aseguramos que la imagen dentro del clon también se muestre */
+.placed-chip img { 
+    width: 100%; 
+    height: 100%; 
+    transform: none;
+}
 
 .chip-value {
   position: absolute;
@@ -861,24 +964,10 @@ html{scroll-behavior:smooth}
   text-shadow: 0 0 6px black;
 }
 
-.chip, .chip * {
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-.chip:active { cursor: grabbing; }
-
-.ghost-chip, .board .chip {
-  transform: scale(0.82);
-}
-
 /* ============================
    TABLERO
    ============================ */
 #board-wrap {
-  width: 1300px;
   display: flex;
   justify-content: center;
 }
@@ -904,6 +993,7 @@ html{scroll-behavior:smooth}
   justify-content:center;
   cursor:pointer;
   user-select:none;
+  position: relative;
 }
 
 .zero{ background:#29903f; grid-row:1/4; grid-column:1; }
@@ -922,14 +1012,70 @@ html{scroll-behavior:smooth}
   gap:6px;
 }
 
+/* ============================
+   CUADRO DERECHO: TABLA DE PAGOS (YELLOW AREA)
+   ============================ */
+.payout-table-panel {
+    width: 300px; 
+    flex-shrink: 0;
+    background: #3d2b1f; 
+    border: 1px solid #c79e6d; 
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.4);
+    min-height: 500px;
+}
+
+.payout-table-panel h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.5rem;
+    color: #fce7b7;
+    text-align: center;
+    border-bottom: 2px solid #c79e6d;
+    padding-bottom: 8px;
+}
+
+.payout-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    color: #f0f0f0;
+}
+
+.payout-table th, .payout-table td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.payout-table th {
+    background: rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.payout-table tr:last-child td {
+    border-bottom: none;
+}
+
+.payout-table .ratio {
+    font-weight: bold;
+    color: #ffc400;
+    text-align: right;
+    white-space: nowrap;
+}
+
+
 /* =====================================================
-   HISTORIAL DE APUESTAS – ESTILO RESTAURADO
+   PANEL HISTORIAL DE JUGADAS (DEBAJO DEL TABLERO)
    ===================================================== */
 
-/* Contenedor */
 .panel-history {
-  width: 1300px;
+  width: 100%;
+  max-width: 1000px;
   margin: 25px auto 0 auto;
+  
   padding: 20px;
   background: rgba(24,24,24,0.92);
   border: 1px solid rgba(255,255,255,.14);
@@ -951,62 +1097,46 @@ html{scroll-behavior:smooth}
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  /* CAMBIO CLAVE: Layout de 5 columnas para el N° cronológico */
+  display: grid; 
+  grid-template-columns: 0.2fr 1.3fr 0.7fr 0.5fr 0.7fr; /* 5 COLUMNAS */
+  gap: 12px 20px; 
+  padding: 0 10px; 
+  
+  /* NUEVO: AUMENTAR TAMAÑO DE FUENTE EN EL HISTORIAL */
+  font-size: 1.15rem; 
 }
 
-/* Filas */
+/* Encabezados de columna (si se añaden en HTML, sino se aplican a los LI) */
 .bet-history li {
-  display: grid;
-  grid-template-columns: 1.2fr 0.7fr 0.7fr 0.9fr;
-  align-items: center;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: rgba(255,255,255,.03);
-  border: 1px solid rgba(255,255,255,.08);
+  /* Propiedades que se aplican a cada fila de resultado */
+  display: contents; /* Permite que los hijos de LI sean items directos del grid */
   font-size: 1.05rem;
-  gap: 12px;
-  transition: background .2s ease, transform .1s ease;
 }
 
-.bet-history li:hover {
-  background: rgba(255,255,255,.07);
-  transform: translateY(-1px);
+.bet-history li > * {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  /* Aseguramos que el texto esté centrado en el grid para mejor alineación */
+  text-align: center;
 }
 
-/* Columnas */
-.h-label {
-  font-weight: 700;
-  color: #f1f1f1;
-  text-align: left;
+.bet-history li:nth-last-child(-n+5) > * { /* 5 elementos en la última fila */
+    border-bottom: none; 
 }
 
-.h-stake {
-  font-weight: bold;
-  color: #e6e6e6;
-  text-align: right;
-}
-
-.h-win {
-  color: #d8d8d8;
-  text-align: right;
-}
-
-/* Ganancia / pérdida */
-.h-delta {
-  font-weight: bold;
-  text-align: right;
-}
+.h-nro { font-weight: 700; text-align: center; }
+.h-label { font-weight: 700; text-align: left; }
+.h-stake { font-weight: bold; text-align: right; }
+.h-win { color: #d8d8d8; text-align: center; }
+.h-delta { font-weight: bold; text-align: right; }
 
 .h-delta.gain {
   color: #31d16b;
-  animation: popGreen 0.35s ease;
 }
 
 .h-delta.loss {
   color: #b01c1f;
-  animation: popRed 0.35s ease;
 }
 
 /* Número ganador */
@@ -1022,10 +1152,13 @@ html{scroll-behavior:smooth}
 }
 
 .win-badge.red   { background: #a82a2a; }
-.win-badge.black { background: #1e1e1e; }
+.win-badge.black { 
+    background: #000 !important; 
+    border: 1px solid #333;
+}
 .win-badge.green { background: #1f7c30; }
 
-/* Animaciones resultado */
+/* Animaciones (mantengo las que tenías por si las usas) */
 @keyframes popGreen {
   0%   { transform: scale(0.85); }
   100% { transform: scale(1); }
@@ -1034,4 +1167,38 @@ html{scroll-behavior:smooth}
 @keyframes popRed {
   0%   { transform: scale(0.85); }
   100% { transform: scale(1); }
+}
+
+
+/* ===================================
+   ESTILOS VISUALES DEL MONTO EN LA CASILLA
+   =================================== */
+
+/* Asegura que los números originales se vean encima de todo */
+.cell {
+    position: relative;
+    overflow: hidden; /* Oculta si el texto es demasiado grande */
+}
+
+/* Estilo para el span que muestra el monto total apostado */
+.bet-total-display {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 2px 4px;
+    font-size: 0.8em; /* Tamaño pequeño para no opacar el número */
+    font-weight: 900;
+    color: #fce7b7; /* Color dorado claro para el monto */
+    background: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+    border-radius: 0 0 8px 8px; /* Bordes redondeados inferiores */
+    line-height: 1;
+    z-index: 10;
+    text-align: center;
+}
+
+/* Estilo para resaltar la casilla cuando tiene una apuesta */
+.cell.active-bet-cell {
+    box-shadow: 0 0 8px rgba(245, 130, 32, 0.8), inset 0 0 8px rgba(245, 130, 32, 0.4);
+    border-color: var(--gold);
 }

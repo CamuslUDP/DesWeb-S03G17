@@ -27,165 +27,184 @@
 
   <main class="arena-wrap">
 
-    <!-- BLOQUE COMPLETO A 1300px DESPLAZADO A 35% -->
-    <section id="bloque-ruleta">
+    <div class="game-layout-container">
 
-      <!-- RULETA CENTRADA -->
-      <div id="ruleta-centro">
-        <div class="wheel-slot">
-          <div class="wheel-wrap-img">
-            <img class="wheel-rim" src="../fotos/contorno.png" alt="contorno">
-            <img class="wheel-inner" src="../fotos/ruleta.png" alt="ruleta">
-            <div class="pointer"></div>
-          </div>
+        <div id="apuestas-activas-panel" class="active-bets-panel">
+            <h3>Apuestas Activas</h3>
+            <ul id="apuestas-activas-list">
+                <li id="empty-bet-message">No hay apuestas activas.</li>
+            </ul>
         </div>
-      </div>
+        
+        <section id="bloque-ruleta">
 
-      <!-- Viñeta y Botones -->
-      <div class="barra-superior-apuestas">
-        <button id="limpiarApuestas" class="btn-limpiar">Limpiar apuestas</button>
-
-        <div id="saldoApuestasBox" class="saldo-box">
-          <span id="saldoApuestasTexto">$85.200</span>
-        </div>
-
-        <button id="spinBtn" class="btn-spin">Girar ruleta</button>
-      </div>
-
-
-
-    <!-- BARRA DE FICHAS  -->
-    <div id="fichas-bar">
-  <div class="chip" data-valor="100">
-    <img src="../fotos/fichas/100.png" draggable="false">
-    <span class="chip-value">$100</span>
-  </div>
-
-  <div class="chip" data-valor="500">
-    <img src="../fotos/fichas/500.png" draggable="false">
-    <span class="chip-value">$500</span>
-  </div>
-
-  <div class="chip" data-valor="1000">
-    <img src="../fotos/fichas/1K.png" draggable="false">
-    <span class="chip-value">$1K</span>
-  </div>
-
-  <div class="chip" data-valor="5000">
-    <img src="../fotos/fichas/5K.png" draggable="false">
-    <span class="chip-value">$5K</span>
-  </div>
-
-  <div class="chip" data-valor="10000">
-    <img src="../fotos/fichas/10K.png" draggable="false">
-    <span class="chip-value">$10K</span>
-  </div>
-
-  <div class="chip" data-valor="50000">
-    <img src="../fotos/fichas/50K.png" draggable="false">
-    <span class="chip-value">$50K</span>
-  </div>
-
-  <div class="chip" data-valor="100000">
-    <img src="../fotos/fichas/100K.png" draggable="false">
-    <span class="chip-value">$100K</span>
-  </div>
-
-  <div class="chip" data-valor="500000">
-    <img src="../fotos/fichas/500K.png" draggable="false">
-    <span class="chip-value">$500K</span>
-  </div>
-
-  <div class="chip" data-valor="1000000">
-    <img src="../fotos/fichas/1M.png" draggable="false">
-    <span class="chip-value">$1M</span>
-  </div>
-
-</div>
-
-
-      <!-- TABLERO (MISMO QUE EL TUYO, SOLO REUBICADO) -->
-      <div id="board-wrap">
-        <div class="board">
-          <button class="cell zero">0</button>
-          <div class="nums">
-
-            <!-- Fila superior -->
-            <button class="cell num red">3</button>
-            <button class="cell num black">6</button>
-            <button class="cell num red">9</button>
-            <button class="cell num red">12</button>
-            <button class="cell num black">15</button>
-            <button class="cell num red">18</button>
-            <button class="cell num red">21</button>
-            <button class="cell num black">24</button>
-            <button class="cell num red">27</button>
-            <button class="cell num red">30</button>
-            <button class="cell num black">33</button>
-            <button class="cell num red">36</button>
-
-            <!-- Fila media -->
-            <button class="cell num black">2</button>
-            <button class="cell num red">5</button>
-            <button class="cell num black">8</button>
-            <button class="cell num black">11</button>
-            <button class="cell num red">14</button>
-            <button class="cell num black">17</button>
-            <button class="cell num black">20</button>
-            <button class="cell num red">23</button>
-            <button class="cell num black">26</button>
-            <button class="cell num black">29</button>
-            <button class="cell num red">32</button>
-            <button class="cell num black">35</button>
-
-            <!-- Fila inferior -->
-            <button class="cell num red">1</button>
-            <button class="cell num black">4</button>
-            <button class="cell num red">7</button>
-            <button class="cell num black">10</button>
-            <button class="cell num black">13</button>
-            <button class="cell num red">16</button>
-            <button class="cell num red">19</button>
-            <button class="cell num black">22</button>
-            <button class="cell num red">25</button>
-            <button class="cell num black">28</button>
-            <button class="cell num black">31</button>
-            <button class="cell num red">34</button>
+          <div id="ruleta-centro">
+            <div class="wheel-slot">
+              <div class="wheel-wrap-img">
+                <img class="wheel-rim" src="../fotos/contorno.png" alt="contorno">
+                <img class="wheel-inner" src="../fotos/ruleta.png" alt="ruleta">
+                <div class="pointer"></div>
+              </div>
+            </div>
           </div>
 
-          <!-- 2 TO 1 -->
-          <button class="cell to1" style="grid-column:14;grid-row:1;">2 to 1</button>
-          <button class="cell to1" style="grid-column:14;grid-row:2;">2 to 1</button>
-          <button class="cell to1" style="grid-column:14;grid-row:3;">2 to 1</button>
+          <div class="barra-superior-apuestas">
+            <button id="limpiarApuestas" class="btn-limpiar">Limpiar apuestas</button>
 
-          <!-- DOCENAS -->
-          <button class="cell dozen" style="grid-column:2/6;grid-row:4;">1st 12</button>
-          <button class="cell dozen" style="grid-column:6/10;grid-row:4;">2nd 12</button>
-          <button class="cell dozen" style="grid-column:10/14;grid-row:4;">3rd 12</button>
+            <div id="saldoApuestasBox" class="saldo-box">
+              <span id="saldoApuestasTexto">$85.200</span>
+            </div>
 
-          <!-- EXTERIORES -->
-          <button class="cell outside" style="grid-column:2/4; grid-row:5;">1–18</button>
-          <button class="cell outside" style="grid-column:4/6; grid-row:5;">EVEN</button>
-          <button class="cell outside red-chip" style="grid-column:6/8; grid-row:5;">RED</button>
-          <button class="cell outside black-chip" style="grid-column:8/10;grid-row:5;">BLACK</button>
-          <button class="cell outside" style="grid-column:10/12;grid-row:5;">ODD</button>
-          <button class="cell outside" style="grid-column:12/14;grid-row:5;">19–36</button>
+            <button id="spinBtn" class="btn-spin">Girar ruleta</button>
+          </div>
+
+        <div id="fichas-bar">
+          <div class="chip" data-valor="100">
+            <img src="../fotos/fichas/100.png" draggable="false">
+            <span class="chip-value">$100</span>
+          </div>
+
+          <div class="chip" data-valor="500">
+            <img src="../fotos/fichas/500.png" draggable="false">
+            <span class="chip-value">$500</span>
+          </div>
+
+          <div class="chip" data-valor="1000">
+            <img src="../fotos/fichas/1K.png" draggable="false">
+            <span class="chip-value">$1K</span>
+          </div>
+
+          <div class="chip" data-valor="5000">
+            <img src="../fotos/fichas/5K.png" draggable="false">
+            <span class="chip-value">$5K</span>
+          </div>
+
+          <div class="chip" data-valor="10000">
+            <img src="../fotos/fichas/10K.png" draggable="false">
+            <span class="chip-value">$10K</span>
+          </div>
+
+          <div class="chip" data-valor="50000">
+            <img src="../fotos/fichas/50K.png" draggable="false">
+            <span class="chip-value">$50K</span>
+          </div>
+
+          <div class="chip" data-valor="100000">
+            <img src="../fotos/fichas/100K.png" draggable="false">
+            <span class="chip-value">$100K</span>
+          </div>
+
+          <div class="chip" data-valor="500000">
+            <img src="../fotos/fichas/500K.png" draggable="false">
+            <span class="chip-value">$500K</span>
+          </div>
+
+          <div class="chip" data-valor="1000000">
+            <img src="../fotos/fichas/1M.png" draggable="false">
+            <span class="chip-value">$1M</span>
+          </div>
 
         </div>
-      </div>
 
-    </section>
 
-    <!-- COLUMNA DERECHA: HISTORIAL (NO TOCADA) -->
+          <div id="board-wrap">
+            <div class="board">
+              <button class="cell zero" data-bet="0">0</button>
+              <div class="nums">
+                <button class="cell num red" data-bet="3">3</button>
+                <button class="cell num black" data-bet="6">6</button>
+                <button class="cell num red" data-bet="9">9</button>
+                <button class="cell num red" data-bet="12">12</button>
+                <button class="cell num black" data-bet="15">15</button>
+                <button class="cell num red" data-bet="18">18</button>
+                <button class="cell num red" data-bet="21">21</button>
+                <button class="cell num black" data-bet="24">24</button>
+                <button class="cell num red" data-bet="27">27</button>
+                <button class="cell num red" data-bet="30">30</button>
+                <button class="cell num black" data-bet="33">33</button>
+                <button class="cell num red" data-bet="36">36</button>
+                <button class="cell num black" data-bet="2">2</button>
+                <button class="cell num red" data-bet="5">5</button>
+                <button class="cell num black" data-bet="8">8</button>
+                <button class="cell num black" data-bet="11">11</button>
+                <button class="cell num red" data-bet="14">14</button>
+                <button class="cell num black" data-bet="17">17</button>
+                <button class="cell num black" data-bet="20">20</button>
+                <button class="cell num red" data-bet="23">23</button>
+                <button class="cell num black" data-bet="26">26</button>
+                <button class="cell num black" data-bet="29">29</button>
+                <button class="cell num red" data-bet="32">32</button>
+                <button class="cell num black" data-bet="35">35</button>
+                <button class="cell num red" data-bet="1">1</button>
+                <button class="cell num black" data-bet="4">4</button>
+                <button class="cell num red" data-bet="7">7</button>
+                <button class="cell num black" data-bet="10">10</button>
+                <button class="cell num black" data-bet="13">13</button>
+                <button class="cell num red" data-bet="16">16</button>
+                <button class="cell num red" data-bet="19">19</button>
+                <button class="cell num black" data-bet="22">22</button>
+                <button class="cell num red" data-bet="25">25</button>
+                <button class="cell num black" data-bet="28">28</button>
+                <button class="cell num black" data-bet="31">31</button>
+                <button class="cell num red" data-bet="34">34</button>
+              </div>
+
+              <button class="cell to1" style="grid-column:14;grid-row:1;" data-bet="Columna 3">2 to 1</button>
+              <button class="cell to1" style="grid-column:14;grid-row:2;" data-bet="Columna 2">2 to 1</button>
+              <button class="cell to1" style="grid-column:14;grid-row:3;" data-bet="Columna 1">2 to 1</button>
+
+              <button class="cell dozen" style="grid-column:2/6;grid-row:4;" data-bet="1st 12">1st 12</button>
+              <button class="cell dozen" style="grid-column:6/10;grid-row:4;" data-bet="2nd 12">2nd 12</button>
+              <button class="cell dozen" style="grid-column:10/14;grid-row:4;" data-bet="3rd 12">3rd 12</button>
+
+              <button class="cell outside" style="grid-column:2/4; grid-row:5;" data-bet="1-18">1–18</button>
+              <button class="cell outside" style="grid-column:4/6; grid-row:5;" data-bet="Par">PAR</button>
+              <button class="cell outside red-chip" style="grid-column:6/8; grid-row:5;" data-bet="Rojo">RED</button>
+              <button class="cell outside black-chip" style="grid-column:8/10;grid-row:5;" data-bet="Negro">BLACK</button>
+              <button class="cell outside" style="grid-column:10/12;grid-row:5;" data-bet="Impar">IMPAR</button>
+              <button class="cell outside" style="grid-column:12/14;grid-row:5;" data-bet="19-36">19–36</button>
+
+            </div>
+          </div>
+
+        </section>
+
+        <div class="payout-table-panel">
+            <h3>Pagos de Apuestas</h3>
+            <table class="payout-table">
+                <thead>
+                    <tr>
+                        <th>Apuesta</th>
+                        <th>Paga</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Número pleno</td><td class="ratio">35:1</td></tr>
+                    <tr><td>División (2 números)</td><td class="ratio">17:1</td></tr>
+                    <tr><td>Calle (3 números)</td><td class="ratio">11:1</td></tr>
+                    <tr><td>Trío 0–1–2 / 0–2–3</td><td class="ratio">11:1</td></tr>
+                    <tr><td>Esquina (4 números)</td><td class="ratio">8:1</td></tr>
+                    <tr><td>Primera Cuaterna 0–1–2–3</td><td class="ratio">8:1</td></tr>
+                    <tr><td>Línea (6 números)</td><td class="ratio">5:1</td></tr>
+                    <tr><td>Docena</td><td class="ratio">2:1</td></tr>
+                    <tr><td>Columna</td><td class="ratio">2:1</td></tr>
+                    <tr><td>Rojo / Negro</td><td class="ratio">1:1</td></tr>
+                    <tr><td>Par / Impar</td><td class="ratio">1:1</td></tr>
+                    <tr><td>1–18 / 19–36</td><td class="ratio">1:1</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
     <section class="panel panel-history panel-history--grow">
-      <h3>Últimas apuestas</h3>
-      <ul class="bet-history bet-history-lg">
-        <li><span class="h-label">Rojo</span><span class="h-stake">$ 10.000 CLP</span><span class="h-win">Ganador: <span class="win-badge red">32</span></span><span class="h-delta gain">+ $ 10.000</span></li>
-        <li><span class="h-label">Par</span><span class="h-stake">$ 20.000 CLP</span><span class="h-win">Ganador: <span class="win-badge black">15</span></span><span class="h-delta gain">+ $ 20.000</span></li>
-        <li><span class="h-label">Números {7, 23}</span><span class="h-stake">$ 10.000 CLP</span><span class="h-win">Ganador: <span class="win-badge red">19</span></span><span class="h-delta loss">− $ 10.000</span></li>
-        <li><span class="h-label">3rd 12</span><span class="h-stake">$ 5.000 CLP</span><span class="h-win">Ganador: <span class="win-badge green">0</span></span><span class="h-delta loss">− $ 5.000</span></li>
-        <li><span class="h-label">Negro</span><span class="h-stake">$ 15.000 CLP</span><span class="h-win">Ganador: <span class="win-badge black">26</span></span><span class="h-delta loss">− $ 15.000</span></li>
-      </ul>
+      <h3>Historial de Jugadas (Últimos 10)</h3>
+      <ul id="historialJugadas" class="bet-history bet-history-lg">
+        <span class="h-nro" style="font-weight: 800; border-bottom: 2px solid rgba(255,255,255,.2);">N°</span>
+        <span class="h-label" style="font-weight: 800; border-bottom: 2px solid rgba(255,255,255,.2);">Tipo de Apuesta</span>
+        <span class="h-stake" style="font-weight: 800; border-bottom: 2px solid rgba(255,255,255,.2);">Monto Apostado</span>
+        <span class="h-win" style="font-weight: 800; border-bottom: 2px solid rgba(255,255,255,.2);">Ganador</span>
+        <span class="h-delta" style="font-weight: 800; border-bottom: 2px solid rgba(255,255,255,.2);">Ganancia/Pérdida</span>
+        </ul>
     </section>
 
   </main>
