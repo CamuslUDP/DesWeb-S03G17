@@ -13,9 +13,10 @@ app.use('/api', apiRoutes);
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // == Fallback =====================================
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/html/index.html'));
 });
+
 
 
 /*
