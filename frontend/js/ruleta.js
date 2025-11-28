@@ -180,12 +180,12 @@ const apuestas = {};
 // =======================
 document.addEventListener("DOMContentLoaded", () => {
 
-  const saldoTexto = document.getElementById("saldoApuestasTexto");
-  const limpiarBtn = document.getElementById("limpiarApuestas");
-  const spinBtn = document.getElementById("spinBtn");
+  const saldoTexto = document.getElementById("saldo-apuestas-texto");
+  const limpiarBtn = document.getElementById("limpiar-apuestas");
+  const spinBtn = document.getElementById("spin-btn");
   const board = document.querySelector(".board");
   const apuestasList = document.getElementById("apuestas-activas-list");
-  const cells = document.querySelectorAll(".board .cell, .board .nums .cell"); 
+  const cells = document.querySelectorAll(".board .cell, .board .num .cell"); 
   const chips = document.querySelectorAll(".chip");
 
   localStorage.removeItem("montoEnJuego");
@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function mostrarErrorSaldo() {
-    const box = document.getElementById("saldoApuestasBox");
+    const box = document.getElementById("saldo-apuestas-box");
     box.classList.add("saldo-error");
     setTimeout(() => box.classList.remove("saldo-error"), 1500);
   }
@@ -451,7 +451,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         sincronizarSaldo();
 
-        const saldoDisplay = document.getElementById("saldoApuestasTexto");
+        const saldoDisplay = document.getElementById("saldo-apuestas-texto");
         saldoDisplay.classList.add("saldo-flash");
         setTimeout(() => saldoDisplay.classList.remove("saldo-flash"), 500);
 
