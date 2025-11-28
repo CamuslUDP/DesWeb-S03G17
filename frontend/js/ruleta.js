@@ -463,7 +463,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function obtenerResultadoDesdeAngulo(anguloCSS) {
-    let a = normalizarAngulo(anguloCSS);
+    const a = normalizarAngulo(anguloCSS);
     if (a >= 355.135145 || a < 4.864865) return 0;
     if (a >= 345.405415 && a < 355.135145) return 32;
     if (a >= 335.675685 && a < 345.405415) return 15;

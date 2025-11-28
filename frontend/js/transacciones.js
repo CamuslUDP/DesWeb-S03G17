@@ -148,7 +148,7 @@ function configurarRedondeoEnBlur(input) {
 document.addEventListener("DOMContentLoaded", () => {
 
   function obtenerSaldoTotal() {
-      let s = Number(localStorage.getItem("saldo"));
+      const s = Number(localStorage.getItem("saldo"));
       return isNaN(s) ? 0 : s;
   }
 
