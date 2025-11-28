@@ -73,9 +73,21 @@ nav ul li a:hover {
 /*---------
 |  Index  |
 ---------*/
-main { color: white; }
+main { 
+  color: white; 
+}
 
-.bienvenida #button {
+.bienvenida {
+  min-height: calc(100vh - 90px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  padding: 0 16px; 
+}
+
+.btn-iniciar-sesion, .btn-registrarse {
   background-color: #ffffff;
   color: #0c0707;
   border: none;
@@ -87,9 +99,11 @@ main { color: white; }
   margin-left: 8px;
   transition: background 0.3s ease;
 }
-.bienvenida #button:hover { 
+
+.bienvenida .btn-iniciar-sesion:hover, .bienvenida .btn-registrarse:hover{ 
   background-color: var(--gold); 
 }
+
 
 .bienvenida h1 {
   font-size: 3.5rem;
@@ -561,7 +575,7 @@ html{scroll-behavior:smooth}
 }
 .profile-data{ font-size:1.05rem; line-height:1.6; }
 .username{
-  margin:0 0 6px; font-size:1.9rem; font-weight:800; color:#f58220;
+  margin:0 0 11px; font-size:1.9rem; font-weight:800; color:#f58220;
 }
 .fullname{
   margin:0 0 12px; font-size:1rem; font-style:italic; color:#d4d4d4;
@@ -655,7 +669,7 @@ html{scroll-behavior:smooth}
 |  Reglas del juego  |
 --------------------*/
 .rules-subtitle{
-  margin: 10px 0 8px;
+  margin: 8px 0 8px;
   font-size: 1.25rem;
   font-weight: 800;
   color: #f58220;
@@ -995,6 +1009,22 @@ html{scroll-behavior:smooth}
   user-select:none;
   position: relative;
 }
+
+
+.board .columna-3 { grid-column: 14; grid-row: 1; }
+.board .columna-2 { grid-column: 14; grid-row: 2; }
+.board .columna-1 { grid-column: 14; grid-row: 3; }
+
+.board.dozen[class~="1st-12"] { grid-column: 2/6; grid-row: 4; }
+.board.dozen[class~="2nd-12"] { grid-column: 6/10; grid-row: 4; }
+.board.dozen[class~="3rd-12"] { grid-column: 10/14; grid-row: 4; }
+
+.board.outside[class~="1-18"] { grid-column:2/4; grid-row:5; }
+.board.outside.par { grid-column:4/6; grid-row:5; }
+.board.outside.red { grid-column:6/8; grid-row:5; }
+.board.outside.black { grid-column:8/10; grid-row:5; }
+.board.outside.impar { grid-column:10/12; grid-row:5; }
+.board.outside[class~="19-36"] { grid-column:12/14; grid-row:5; }
 
 .zero{ background:#29903f; grid-row:1/4; grid-column:1; }
 .num.red{ background:#a02020; }

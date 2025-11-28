@@ -49,13 +49,13 @@
           </div>
 
           <div class="barra-superior-apuestas">
-            <button id="limpiarApuestas" class="btn-limpiar">Limpiar apuestas</button>
+            <button id="limpiar-apuestas" class="btn-limpiar">Limpiar apuestas</button>
 
-            <div id="saldoApuestasBox" class="saldo-box">
-              <span id="saldoApuestasTexto">$85.200</span>
+            <div id="saldo-apuestasBox" class="saldo-box">
+              <span id="saldo-apuestasTexto">$85.200</span>
             </div>
 
-            <button id="spinBtn" class="btn-spin">Girar ruleta</button>
+            <button id="spin-btn" class="btn-spin">Girar ruleta</button>
           </div>
 
         <div id="fichas-bar">
@@ -148,22 +148,21 @@
                 <button class="cell num black" data-bet="31">31</button>
                 <button class="cell num red" data-bet="34">34</button>
               </div>
+              
+              <button class="cell to1 columna-3" data-bet="Columna 3">2 to 1</button>
+              <button class="cell to1 columna-2" data-bet="Columna 2">2 to 1</button>
+              <button class="cell to1 columna-1" data-bet="Columna 1">2 to 1</button>
 
-              <button class="cell to1" style="grid-column:14;grid-row:1;" data-bet="Columna 3">2 to 1</button>
-              <button class="cell to1" style="grid-column:14;grid-row:2;" data-bet="Columna 2">2 to 1</button>
-              <button class="cell to1" style="grid-column:14;grid-row:3;" data-bet="Columna 1">2 to 1</button>
+              <button class="cell dozen 1st-12" data-bet="1st 12">1st 12</button>
+              <button class="cell dozen 2nd-12" data-bet="2nd 12">2nd 12</button>
+              <button class="cell dozen 3rd-12" data-bet="3rd 12">3rd 12</button>
 
-              <button class="cell dozen" style="grid-column:2/6;grid-row:4;" data-bet="1st 12">1st 12</button>
-              <button class="cell dozen" style="grid-column:6/10;grid-row:4;" data-bet="2nd 12">2nd 12</button>
-              <button class="cell dozen" style="grid-column:10/14;grid-row:4;" data-bet="3rd 12">3rd 12</button>
-
-              <button class="cell outside" style="grid-column:2/4; grid-row:5;" data-bet="1-18">1–18</button>
-              <button class="cell outside" style="grid-column:4/6; grid-row:5;" data-bet="Par">PAR</button>
-              <button class="cell outside red-chip" style="grid-column:6/8; grid-row:5;" data-bet="Rojo">RED</button>
-              <button class="cell outside black-chip" style="grid-column:8/10;grid-row:5;" data-bet="Negro">BLACK</button>
-              <button class="cell outside" style="grid-column:10/12;grid-row:5;" data-bet="Impar">IMPAR</button>
-              <button class="cell outside" style="grid-column:12/14;grid-row:5;" data-bet="19-36">19–36</button>
-
+              <button class="cell outside 1-18" data-bet="1-18">1–18</button>
+              <button class="cell outside par" data-bet="Par">PAR</button>
+              <button class="cell outside red" data-bet="Rojo">RED</button>
+              <button class="cell outside black" data-bet="Negro">BLACK</button>
+              <button class="cell outside impar" data-bet="Impar">IMPAR</button>
+              <button class="cell outside 19-36" data-bet="19-36">19–36</button>
             </div>
           </div>
 
@@ -196,9 +195,9 @@
         </div>
 
     </div>
-    <section class="panel panel-history panel-history--grow">
+    <section class="panel panel-history panel-history-grow">
       <h3>Historial de Jugadas (Últimos 10)</h3>
-      <ul id="historialJugadas" class="bet-history bet-history-lg">
+      <ul id="historial-jugadas" class="bet-history bet-history-lg">
         <span class="h-nro" style="font-weight: 800; border-bottom: 2px solid rgba(255,255,255,.2);">N°</span>
         <span class="h-label" style="font-weight: 800; border-bottom: 2px solid rgba(255,255,255,.2);">Tipo de Apuesta</span>
         <span class="h-stake" style="font-weight: 800; border-bottom: 2px solid rgba(255,255,255,.2);">Monto Apostado</span>
@@ -209,6 +208,5 @@
 
   </main>
 <script src="../js/ruleta.js"></script>
-
 </body>
 </html>
