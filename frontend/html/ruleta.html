@@ -51,8 +51,8 @@
           <div class="barra-superior-apuestas">
             <button id="limpiar-apuestas" class="btn-limpiar">Limpiar apuestas</button>
 
-            <div id="saldo-apuestasBox" class="saldo-box">
-              <span id="saldo-apuestasTexto">$85.200</span>
+            <div id="saldo-apuestas-box" class="saldo-box">
+              <span id="saldo-apuestas-texto">$85.200</span>
             </div>
 
             <button id="spin-btn" class="btn-spin">Girar ruleta</button>
@@ -110,7 +110,6 @@
           <div id="board-wrap">
             <div class="board">
               <button class="cell zero" data-bet="0">0</button>
-              <div class="nums">
                 <button class="cell num red" data-bet="3">3</button>
                 <button class="cell num black" data-bet="6">6</button>
                 <button class="cell num red" data-bet="9">9</button>
@@ -147,7 +146,6 @@
                 <button class="cell num black" data-bet="28">28</button>
                 <button class="cell num black" data-bet="31">31</button>
                 <button class="cell num red" data-bet="34">34</button>
-              </div>
               
               <button class="cell to1 columna-3" data-bet="Columna 3">2 to 1</button>
               <button class="cell to1 columna-2" data-bet="Columna 2">2 to 1</button>
@@ -198,12 +196,12 @@
     <section class="panel panel-history panel-history-grow">
       <h3>Historial de Jugadas (Últimos 10)</h3>
       <ul id="historial-jugadas" class="bet-history bet-history-lg">
-        <span class="h-nro" style="font-weight: 800; border-bottom: 2px solid rgba(255,255,255,.2);">N°</span>
-        <span class="h-label" style="font-weight: 800; border-bottom: 2px solid rgba(255,255,255,.2);">Tipo de Apuesta</span>
-        <span class="h-stake" style="font-weight: 800; border-bottom: 2px solid rgba(255,255,255,.2);">Monto Apostado</span>
-        <span class="h-win" style="font-weight: 800; border-bottom: 2px solid rgba(255,255,255,.2);">Ganador</span>
-        <span class="h-delta" style="font-weight: 800; border-bottom: 2px solid rgba(255,255,255,.2);">Ganancia/Pérdida</span>
-        </ul>
+        <span class="h-nro historial-header">N°</span>
+        <span class="h-label historial-header">Tipo de Apuesta</span>
+        <span class="h-stake historial-header">Monto Apostado</span>
+        <span class="h-win historial-header">Ganador</span>
+        <span class="h-delta historial-header">Ganancia/Pérdida</span>
+      </ul>
     </section>
 
   </main>

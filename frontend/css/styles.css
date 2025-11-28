@@ -839,8 +839,8 @@ html{scroll-behavior:smooth}
   align-items: center;
 }
 
-#spinBtn,
-#limpiarApuestas {
+#spin-btn,
+#limpiar-apuestas {
   width: 260px;
   padding: 18px 20px;
   font-size: 1.5rem;
@@ -850,17 +850,17 @@ html{scroll-behavior:smooth}
   border: 2px solid transparent;
 }
 
-#spinBtn {
+#spin-btn {
   background: var(--gold);
   color: white;
 }
-#limpiarApuestas {
+#limpiar-apuestas {
   background: #aaa;
   color: #111;
 }
 
-#spinBtn:hover { background: rgba(210, 56, 0, 0.78); }
-#limpiarApuestas:hover { background: #ddd; }
+#spin-btn:hover { background: rgba(210, 56, 0, 0.78); }
+#limpiar-apuestas:hover { background: #ddd; }
 
 
 /* ------------------------------ */
@@ -989,7 +989,7 @@ html{scroll-behavior:smooth}
 .board {
   display:grid;
   grid-template-columns: 105px repeat(12, 90px) 105px;
-  grid-auto-rows: 75px;
+  grid-template-rows: repeat(5, 75px);
   gap:6px;
   padding:6px;
   background:#121212;
@@ -1010,37 +1010,64 @@ html{scroll-behavior:smooth}
   position: relative;
 }
 
-
-.board .columna-3 { grid-column: 14; grid-row: 1; }
-.board .columna-2 { grid-column: 14; grid-row: 2; }
-.board .columna-1 { grid-column: 14; grid-row: 3; }
-
-.board.dozen[class~="1st-12"] { grid-column: 2/6; grid-row: 4; }
-.board.dozen[class~="2nd-12"] { grid-column: 6/10; grid-row: 4; }
-.board.dozen[class~="3rd-12"] { grid-column: 10/14; grid-row: 4; }
-
-.board.outside[class~="1-18"] { grid-column:2/4; grid-row:5; }
-.board.outside.par { grid-column:4/6; grid-row:5; }
-.board.outside.red { grid-column:6/8; grid-row:5; }
-.board.outside.black { grid-column:8/10; grid-row:5; }
-.board.outside.impar { grid-column:10/12; grid-row:5; }
-.board.outside[class~="19-36"] { grid-column:12/14; grid-row:5; }
-
 .zero{ background:#29903f; grid-row:1/4; grid-column:1; }
 .num.red{ background:#a02020; }
 .num.black{ background:#000; }
 .dozen, .outside, .to1 { background: #555; color:white; }
-.red-chip{ background:#a02020; }
-.black-chip{ background:#000; }
+.outside.red{ background:#a02020; }
+.outside.black{ background:#000; }
 
-.nums{
-  grid-column:2/14;
-  grid-row:1/4;
-  display:grid;
-  grid-template-columns:repeat(12,1fr);
-  grid-template-rows:repeat(3,1fr);
-  gap:6px;
-}
+.num-3 { grid-column: 2; grid-row: 1; }
+.num-6 { grid-column: 3; grid-row: 1; }
+.num-9 { grid-column: 4; grid-row: 1; }
+.num-12 { grid-column: 5; grid-row: 1; }
+.num-15 { grid-column: 6; grid-row: 1; }
+.num-18 { grid-column: 7; grid-row: 1; }
+.num-21 { grid-column: 8; grid-row: 1; }
+.num-24 { grid-column: 9; grid-row: 1; }
+.num-27 { grid-column: 10; grid-row: 1; }
+.num-30 { grid-column: 11; grid-row: 1; }
+.num-33 { grid-column: 12; grid-row: 1; }
+.num-36 { grid-column: 13; grid-row: 1; }
+.num-2 { grid-column: 2; grid-row: 2; }
+.num-5 { grid-column: 3; grid-row: 2; }
+.num-8 { grid-column: 4; grid-row: 2; }
+.num-11 { grid-column: 5; grid-row: 2; }
+.num-14 { grid-column: 6; grid-row: 2; }
+.num-17 { grid-column: 7; grid-row: 2; }
+.num-20 { grid-column: 8; grid-row: 2; }
+.num-23 { grid-column: 9; grid-row: 2; }
+.num-26 { grid-column: 10; grid-row: 2; }
+.num-29 { grid-column: 11; grid-row: 2; }
+.num-32 { grid-column: 12; grid-row: 2; }
+.num-35 { grid-column: 13; grid-row: 2; }
+.num-1 { grid-column: 2; grid-row: 3; }
+.num-4 { grid-column: 3; grid-row: 3; }
+.num-7 { grid-column: 4; grid-row: 3; }
+.num-10 { grid-column: 5; grid-row: 3; }
+.num-13 { grid-column: 6; grid-row: 3; }
+.num-16 { grid-column: 7; grid-row: 3; }
+.num-19 { grid-column: 8; grid-row: 3; }
+.num-22 { grid-column: 9; grid-row: 3; }
+.num-25 { grid-column: 10; grid-row: 3; }
+.num-28 { grid-column: 11; grid-row: 3; }
+.num-31 { grid-column: 12; grid-row: 3; }
+.num-34 { grid-column: 13; grid-row: 3; }
+
+.columna-3 { grid-column: 14; grid-row: 1; }
+.columna-2 { grid-column: 14; grid-row: 2; }
+.columna-1 { grid-column: 14; grid-row: 3; }
+
+.dozen[class~="1st-12"] { grid-column: 2/6; grid-row: 4; }
+.dozen[class~="2nd-12"] { grid-column: 6/10; grid-row: 4; }
+.dozen[class~="3rd-12"] { grid-column: 10/14; grid-row: 4; }
+
+.outside[class~="1-18"] { grid-column:2/4; grid-row:5; }
+.outside.par { grid-column:4/6; grid-row:5; }
+.outside.red { grid-column:6/8; grid-row:5; }
+.outside.black { grid-column:8/10; grid-row:5; }
+.outside.impar { grid-column:10/12; grid-row:5; }
+.outside[class~="19-36"] { grid-column:12/14; grid-row:5; }
 
 /* ============================
    CUADRO DERECHO: TABLA DE PAGOS (YELLOW AREA)
@@ -1155,11 +1182,16 @@ html{scroll-behavior:smooth}
     border-bottom: none; 
 }
 
-.h-nro { font-weight: 700; text-align: center; }
-.h-label { font-weight: 700; text-align: left; }
-.h-stake { font-weight: bold; text-align: right; }
+
+.historial-header {
+  font-weight: 800 !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+.h-nro {  text-align: center; }
+.h-label {  text-align: left; }
+.h-stake { font-weight: bold; text-align: center; }
 .h-win { color: #d8d8d8; text-align: center; }
-.h-delta { font-weight: bold; text-align: right; }
+.h-delta { font-weight: bold; text-align: center; }
 
 .h-delta.gain {
   color: #31d16b;
