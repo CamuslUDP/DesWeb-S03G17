@@ -8,16 +8,11 @@
 }
 
 :root {
-  --gold: #F58220;
-  /* color del logo */
-  --card: #2b2b2b;
-  /* viñeta oscura */
-  --pill: #e9e9e9;
-  /* viñeta gris de inputs */
-  --text: #fff;
-  /* texto claro */
-  --dark: #121212;
-  /* botón oscuro */
+  --gold: #F58220;    /* color del logo */
+  --card: #2b2b2b;    /* viñeta oscura */
+  --pill: #e9e9e9;    /* viñeta gris de inputs */
+  --text: #fff;    /* texto claro */
+  --dark: #121212;    /* botón oscuro */
 }
 
 html,
@@ -29,7 +24,7 @@ body {
   margin: 0;
   color: #f2f2f2;
   background: #000 url("../fotos/fondo3.png") center/cover fixed no-repeat;
-  font-family: "Georgia", "Times New Roman", serif;
+  font-family: Georgia, "Times New Roman", serif;
   padding-top: 90px;
   line-height: 1.5;
 }
@@ -116,7 +111,6 @@ main {
 .bienvenida .btn-registrarse:hover {
   background-color: var(--gold);
 }
-
 
 .bienvenida h1 {
   font-size: 3.5rem;
@@ -257,7 +251,7 @@ body.login-page {
   text-align: center;
   font-size: 1rem;
   letter-spacing: 0.28rem;
-  opacity: 90%;
+  opacity: 0.9;
 }
 
 .login-title {
@@ -562,7 +556,7 @@ body.login-page {
 .campo-form input::placeholder,
 .campo-form select::placeholder {
   font-size: 1.05rem !important;
-  opacity: 75%;
+  opacity: 0.75;
 }
 
 .fila-exp input {
@@ -583,20 +577,6 @@ body.login-page {
 | Perfil
 --- */
 
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  height: 100%;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-/* Viñeta */
 .profile-wrap {
   display: flex;
   justify-content: center;
@@ -1510,7 +1490,8 @@ html {
 
 .payout-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 1rem;
   color: #f0f0f0;
 }
@@ -1683,9 +1664,9 @@ html {
 }
 
 
-/* ========================================
+/* ===================================
    ESTILOS VISUALES DEL MONTO EN LA CASILLA
-   ======================================== */
+   =================================== */
 
 /* Asegura que los números originales se vean encima de todo */
 .cell {
