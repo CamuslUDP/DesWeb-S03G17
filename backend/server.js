@@ -2,30 +2,29 @@ const apiRoutes = require('./routes');
 const config = require('../commons/configs/site.config.js');
 const express = require('express');
 const path = require('path');
+const cookieParser = require('cookie-parser');
+
+const { connectDB } = require('./utils/db');
 
 const app = express();
 app.use(express.json());
-app.use(cookieParser()); // <-- AÑADIR: Para manejar cookies de sesión
+app.use(cookieParser());
 
 // == API ===============================
 app.use('/api', apiRoutes);
 
-// == Archivos Estáticos ==========================
-app.use(express.static(path.join(__dirname, '../frontend')));
+// == Archivos ==========================
+app.use(express.static(path.join(__dirname, '../frontend/html')));
+app.use(express.static(path.join(__dirname, '../frontend/css')));
+app.use(express.static(path.join(__dirname, '../frontend/js')));
+app.use(express.static(path.join(__dirname, '../frontend/fotos')));
 
 // == Fallback =====================================
 app.use('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/html/index.html'));
 });
 
-/*
-app.use((req, res) => {
-    res.status(404).json({ error: 'Route not found' });
-});
-*/
-
-const { connectDB } = require('./utils/db');
-
+// == Servidor ==========================
 async function startServer() {
     try {
         // Conectar a MongoDB antes de empezar a escuchar peticiones
@@ -43,4 +42,4 @@ async function startServer() {
     }
 }
 
-startServer(); // Llamar a la función para iniciar
+startServer();
