@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   
-  // --- SELECCIÓN DE FICHA ---
+  // --- Fichas ---
   function seleccionarFicha(chip) {
       if (girando) return; 
 
@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
     chip.addEventListener("click", () => seleccionarFicha(chip));
   });
 
-  // --- COLOCAR APUESTA ---
+  // --- Apostar ---
   function obtenerMontoDisplay(celdaEl) {
       let display = celdaEl.querySelector('.bet-total-display');
       if (!display) {
@@ -340,7 +340,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // --- LIMPIAR ---
+  // --- Limpiar ---
   function limpiarTablero() {
     cells.forEach(celda => {
         const display = celda.querySelector('.bet-total-display');

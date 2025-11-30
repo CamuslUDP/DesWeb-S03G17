@@ -1,10 +1,8 @@
-// Endpoint heartbeat
-module.exports = function (router) {
-    router.get('/heartbeat', (req, res) => {
-        res.json({
-            alive: true,
-            timestamp: new Date(),
-            mensaje: 'I am alive!',
-        });
-    });
-};
+const express = require("express");
+const router = express.Router();
+
+router.get("/", (req, res) => {
+  res.json({ alive: true });
+});
+
+module.exports = router;
