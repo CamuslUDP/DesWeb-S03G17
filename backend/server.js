@@ -40,7 +40,7 @@ app.use((req, res) => {
 async function startServer() {
     try {
         await connectDB();
-        app.listen(3042, () => {
+        app.listen(3042, "0.0.0.0", () => {
             console.log(`Servidor Express escuchando en puerto 3042`);
             console.log(`Dominio configurado: ${config.DOMAIN}`);
         });
