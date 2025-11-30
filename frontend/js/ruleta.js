@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if(girando || !chipSeleccionada) return;
             if(chipValue > saldoDisponible) return alert("Saldo insuficiente");
 
-            let betName = celda.dataset.bet || celda.textContent.trim();
+            const betName = celda.dataset.bet || celda.textContent.trim();
             if(!betName) return;
 
             apuestas[betName] = (apuestas[betName] || 0) + chipValue;
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.preventDefault();
             if(girando) return;
             
-            let betName = celda.dataset.bet || celda.textContent.trim();
+            const betName = celda.dataset.bet || celda.textContent.trim();
             if(apuestas[betName]) {
                 saldoDisponible += apuestas[betName];
                 delete apuestas[betName];
