@@ -1159,6 +1159,7 @@ body.login-page {
   user-select: none;
   position: relative;
   overflow: hidden;
+  padding-bottom: 14px;
 }
 
 .zero {
@@ -1480,6 +1481,60 @@ body.login-page {
   white-space: nowrap;
 }
 
+/* =========================================
+   ESTILOS VISUALES DEL MONTO EN LA CASILLA
+   ========================================= */
+
+/* Aseguramos que la celda sea el contenedor relativo */
+.cell, .num, .zero, .column-cell, .dozens-cell {
+    position: relative !important; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* El cuadro de texto dorado en la parte inferior */
+.bet-total-display {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    
+    /* Diseño del cuadro */
+    background-color: rgba(0, 0, 0, 0.85); 
+    border-top: 1px solid #F58220; 
+    color: #F58220;
+    
+    /* Tipografía */
+    font-size: 0.75rem; 
+    font-weight: bold;
+    text-align: center;
+    padding: 2px 0;
+    
+    /* Bordes redondeados abajo para coincidir con la celda */
+    border-bottom-left-radius: 8px; 
+    border-bottom-right-radius: 8px;
+    
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Resaltar la celda cuando tiene apuesta activa */
+.active-bet-cell {
+    box-shadow: inset 0 0 0 1px #F58220, 0 0 10px rgba(245, 130, 32, 0.4);
+    border-color: #F58220 !important;
+}
+
+/* Ajuste para el historial detallado (para que el texto no se corte feo) */
+.h-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+    display: inline-block;
+    vertical-align: middle;
+}
 
 /* =====================================================
    PANEL HISTORIAL DE JUGADAS (DEBAJO DEL TABLERO)
