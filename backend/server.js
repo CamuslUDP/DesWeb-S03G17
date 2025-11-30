@@ -16,9 +16,9 @@ app.use('/api', apiRoutes);
 
 // == Archivos Estáticos (Frontend) =====
 app.use(express.static(path.join(__dirname, '../frontend/html')));
-app.use(express.static(path.join(__dirname, '../frontend/css')));
-app.use(express.static(path.join(__dirname, '../frontend/js')));
-app.use(express.static(path.join(__dirname, '../frontend/fotos')));
+app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
+app.use('/js', express.static(path.join(__dirname, '../frontend/js')));
+app.use('/fotos', express.static(path.join(__dirname, '../frontend/fotos')));
 
 // == Rutas específicas para archivos HTML si no se resuelven automáticamente ==
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../frontend/html/index.html')));
