@@ -10,135 +10,132 @@ const COLORES_RULETA = {
     3: 'red', 26: 'black'
 };
 
+const NOMBRES_APUESTAS = {
+    "red": "Rojo", "black": "Negro",
+    "even": "Par", "odd": "Impar",
+    "low": "1-18", "high": "19-36"
+};
+
 // =======================
 //  STATE GLOBAL
 // =======================
-let saldoDisponible = 0; // Se llenará desde el backend
+let saldoDisponible = 0;
 let chipSeleccionada = null; 
-let chipValue = 0; 
+let chipValue = 0;
 let girando = false; 
-const apuestas = {}; 
+const apuestas = {}; // { "17": 500, "Rojo": 1000 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Carga inicial de datos REALES desde el servidor
     await actualizarSaldoDesdeServer();
     await cargarHistorialJugadas();
 
     // Referencias DOM
-    const saldoTexto = document.getElementById("saldo-apuestas-texto"); // La "pestañita" del saldo
+    const saldoTexto = document.getElementById("saldo-apuestas-texto");
     const spinBtn = document.getElementById("spin-btn");
     const limpiarBtn = document.getElementById("limpiar-apuestas");
     const chips = document.querySelectorAll(".chip");
-    const cells = document.querySelectorAll(".board .cell, .board .num .cell");
+    
+    // Todas las celdas clicables del tablero
+    const cells = document.querySelectorAll(".board .cell, .board .num, .board .zero, .board .column-cell, .board .dozens-cell, .bet-cell"); 
     const rueda = document.querySelector(".wheel-inner");
 
-    // --- FUNCIONES SALDO (Backend Connection) ---
-    async function actualizarSaldoDesdeServer() {
-        try {
-            // Petición al endpoint de perfil para obtener el saldo real
-            const res = await fetch("/api/user/profile");
-            if(res.ok) {
-                const data = await res.json();
-                // El saldo disponible para apostar es el saldo total menos lo que ya pusiste en la mesa
-                saldoDisponible = data.balance - calcularTotalMesa(); 
-                actualizarDisplaySaldo();
-            } else {
-                console.error("Error obteniendo saldo");
-            }
-        } catch(e) { 
-            console.error("Error de conexión al obtener saldo", e); 
-        }
-    }
-
-    function calcularTotalMesa() {
-        return Object.values(apuestas).reduce((a, b) => a + b, 0);
-    }
-
-    function actualizarDisplaySaldo() {
-        if(saldoTexto) {
-            saldoTexto.textContent = "$" + saldoDisponible.toLocaleString("es-CL");
-        }
-    }
-
-    // --- INTERACCIÓN FICHAS ---
+    // --- 1. SELECCIÓN DE FICHAS ---
     chips.forEach(chip => {
         chip.addEventListener("click", () => {
             if(girando) return;
             chips.forEach(c => c.classList.remove('selected'));
+            
             const val = Number(chip.dataset.valor);
             if(val > saldoDisponible) {
                 alert("No tienes suficiente saldo para esta ficha");
-                chipSeleccionada = null;
                 return;
             }
+            
             chip.classList.add('selected');
             chipSeleccionada = chip;
             chipValue = val;
         });
     });
 
-    // --- INTERACCIÓN TABLERO ---
+    // --- 2. CLIC EN TABLERO ---
     cells.forEach(celda => {
-        celda.addEventListener("click", () => {
+        celda.addEventListener("click", function() {
             if(girando || !chipSeleccionada) return;
             if(chipValue > saldoDisponible) return alert("Saldo insuficiente");
 
-            const betName = celda.dataset.bet || celda.textContent.trim();
-            
-            // Lógica local visual
+            // Identificar la apuesta
+            let betName = celda.dataset.bet || celda.textContent.trim();
+            if(!betName) return; // Si es una celda vacía o de adorno
+
+            // Lógica de saldo local
             apuestas[betName] = (apuestas[betName] || 0) + chipValue;
-            
-            // Actualizamos el saldo visual restando la ficha recién puesta
             saldoDisponible -= chipValue;
-            
             actualizarDisplaySaldo();
+
+            // --- VISUAL: ACTUALIZAR EL CUADRO DORADO ---
+            actualizarCuadroMonto(celda, apuestas[betName]);
             actualizarApuestasActivasDisplay();
-            celda.classList.add('active-bet-cell'); // Visual
         });
-        
-        // Click derecho para quitar apuesta
+
+        // Click derecho: Quitar apuesta
         celda.addEventListener("contextmenu", e => {
             e.preventDefault();
             if(girando) return;
-            const betName = celda.dataset.bet || celda.textContent.trim();
+            
+            let betName = celda.dataset.bet || celda.textContent.trim();
             if(apuestas[betName]) {
-                saldoDisponible += apuestas[betName]; // Devolver al saldo visual
+                saldoDisponible += apuestas[betName];
                 delete apuestas[betName];
+                
                 actualizarDisplaySaldo();
                 actualizarApuestasActivasDisplay();
-                celda.classList.remove('active-bet-cell');
+                
+                // Quitar visualmente el cuadro
+                const display = celda.querySelector(".bet-total-display");
+                if(display) display.remove();
+                celda.classList.remove("active-bet-cell");
             }
         });
     });
 
-    function actualizarApuestasActivasDisplay() {
-        const list = document.getElementById("apuestas-activas-list");
-        if(!list) return;
-        list.innerHTML = "";
-        Object.keys(apuestas).forEach(k => {
-            const li = document.createElement("li");
-            li.innerHTML = `<span class="bet-label">${k}</span> <span class="bet-amount">$${apuestas[k]}</span>`;
-            list.appendChild(li);
-        });
+    // Función para dibujar/actualizar la barrita dorada abajo
+    function actualizarCuadroMonto(celda, monto) {
+        let display = celda.querySelector(".bet-total-display");
+        
+        if (!display) {
+            display = document.createElement("div");
+            display.className = "bet-total-display";
+            celda.appendChild(display);
+            celda.classList.add("active-bet-cell");
+        }
+
+        // Formato corto si es necesario (ej: $1.5k)
+        let textoMonto = "$" + monto.toLocaleString("es-CL");
+        if (monto >= 1000000) textoMonto = "$" + (monto/1000000).toFixed(1) + "M";
+        else if (monto >= 1000 && monto < 1000000 && celda.offsetWidth < 60) { 
+            // Solo abreviar si la celda es muy angosta
+            textoMonto = "$" + (monto/1000).toFixed(0) + "k";
+        }
+
+        display.textContent = textoMonto;
     }
 
+    // --- 3. BOTONES ---
     limpiarBtn.addEventListener("click", () => {
         if(girando) return;
-        // Borrar todas las apuestas locales
         for (const k in apuestas) delete apuestas[k];
         
-        // Limpiar visualmente
-        cells.forEach(c => c.classList.remove('active-bet-cell'));
+        // Limpiar visual
+        document.querySelectorAll(".bet-total-display").forEach(el => el.remove());
+        document.querySelectorAll(".active-bet-cell").forEach(el => el.classList.remove("active-bet-cell"));
         
-        // Restaurar el saldo trayendo el dato fresco del servidor
         actualizarSaldoDesdeServer(); 
         actualizarApuestasActivasDisplay();
     });
 
-    // --- GIRAR (CONEXIÓN API) ---
     spinBtn.addEventListener("click", async () => {
         if(girando) return;
-        const totalMesa = calcularTotalMesa();
+        const totalMesa = Object.values(apuestas).reduce((a, b) => a + b, 0);
         if(totalMesa === 0) return alert("Realiza una apuesta primero.");
 
         girando = true;
@@ -157,81 +154,106 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if(!res.ok) {
                 alert("Error: " + data.error);
-                girando = false;
-                spinBtn.disabled = false;
-                limpiarBtn.disabled = false;
+                resetControles();
                 return;
             }
 
-            // Iniciar Animación
             girarRuletaAnimacion(data.result, () => {
-                // Al terminar:
-                // 1. El servidor ya calculó el nuevo saldo, actualizamos la variable local
                 saldoDisponible = data.balance; 
                 actualizarDisplaySaldo();
                 
-                // 2. Limpiamos la mesa
+                // Limpiar Mesa
                 for (const k in apuestas) delete apuestas[k];
-                cells.forEach(c => c.classList.remove('active-bet-cell'));
+                document.querySelectorAll(".bet-total-display").forEach(el => el.remove());
+                document.querySelectorAll(".active-bet-cell").forEach(el => el.classList.remove("active-bet-cell"));
                 actualizarApuestasActivasDisplay();
 
-                girando = false;
-                spinBtn.disabled = false;
-                limpiarBtn.disabled = false;
-                
+                resetControles();
                 cargarHistorialJugadas();
             });
 
         } catch(e) {
             console.error(e);
             alert("Error de red");
-            girando = false;
-            spinBtn.disabled = false;
-            limpiarBtn.disabled = false;
+            resetControles();
         }
     });
-    
-    // --- HELPERS Y UTILIDADES ---
+
+    function resetControles() {
+        girando = false;
+        spinBtn.disabled = false;
+        limpiarBtn.disabled = false;
+    }
+
+    // --- 4. AYUDAS ---
+    async function actualizarSaldoDesdeServer() {
+        try {
+            const res = await fetch("/api/user/profile");
+            if(res.ok) {
+                const data = await res.json();
+                const totalMesa = Object.values(apuestas).reduce((a, b) => a + b, 0);
+                saldoDisponible = data.balance - totalMesa;
+                actualizarDisplaySaldo();
+            }
+        } catch(e) {}
+    }
+
+    function actualizarDisplaySaldo() {
+        if(saldoTexto) saldoTexto.textContent = "$" + saldoDisponible.toLocaleString("es-CL");
+    }
+
+    function actualizarApuestasActivasDisplay() {
+        const list = document.getElementById("apuestas-activas-list");
+        if(!list) return;
+        list.innerHTML = "";
+        Object.keys(apuestas).forEach(k => {
+            const li = document.createElement("li");
+            li.innerHTML = `<span class="bet-label">${k}</span> <span class="bet-amount">$${apuestas[k].toLocaleString("es-CL")}</span>`;
+            list.appendChild(li);
+        });
+    }
 
     function transformarApuestasParaBackend(apuestasLocales) {
         const resultado = [];
         for(const [key, amount] of Object.entries(apuestasLocales)) {
             if(!isNaN(Number(key))) {
                 resultado.push({ type: "straight", value: Number(key), amount });
-            } else if(key === "Rojo") {
-                resultado.push({ type: "color", value: "red", amount });
-            } else if(key === "Negro") {
-                resultado.push({ type: "color", value: "black", amount });
-            } else if(key === "Par") {
-                resultado.push({ type: "evenodd", value: "even", amount });
-            } else if(key === "Impar") {
-                resultado.push({ type: "evenodd", value: "odd", amount });
-            } else if(key === "1-18") {
-                resultado.push({ type: "range", value: "low", amount });
-            } else if(key === "19-36") {
-                resultado.push({ type: "range", value: "high", amount });
-            } else if(key === "1st 12") {
-                resultado.push({ type: "dozen", value: 1, amount });
-            } else if(key === "2nd 12") {
-                resultado.push({ type: "dozen", value: 2, amount });
-            } else if(key === "3rd 12") {
-                resultado.push({ type: "dozen", value: 3, amount });
-            } else if(key === "Columna 1") {
-                resultado.push({ type: "column", value: 1, amount });
-            } else if(key === "Columna 2") {
-                resultado.push({ type: "column", value: 2, amount });
-            } else if(key === "Columna 3") {
-                resultado.push({ type: "column", value: 3, amount });
+            } else {
+                const k = key.toLowerCase();
+                if(k.includes("rojo") || k === "red") resultado.push({ type: "color", value: "red", amount });
+                else if(k.includes("negro") || k === "black") resultado.push({ type: "color", value: "black", amount });
+                else if(k.includes("par") && !k.includes("impar")) resultado.push({ type: "evenodd", value: "even", amount });
+                else if(k.includes("impar")) resultado.push({ type: "evenodd", value: "odd", amount });
+                else if(k === "1-18") resultado.push({ type: "range", value: "low", amount });
+                else if(k === "19-36") resultado.push({ type: "range", value: "high", amount });
+                else if(k.includes("1st 12") || k.includes("1ra 12") || k.includes("1st")) resultado.push({ type: "dozen", value: 1, amount });
+                else if(k.includes("2nd 12") || k.includes("2da 12") || k.includes("2nd")) resultado.push({ type: "dozen", value: 2, amount });
+                else if(k.includes("3rd 12") || k.includes("3ra 12") || k.includes("3rd")) resultado.push({ type: "dozen", value: 3, amount });
+                else if(k.includes("columna 1") || k.includes("columna 3") || k.includes("columna 2")) {
+                    // Detectar número de columna del texto
+                    if(k.includes("1")) resultado.push({ type: "column", value: 1, amount });
+                    if(k.includes("2")) resultado.push({ type: "column", value: 2, amount });
+                    if(k.includes("3")) resultado.push({ type: "column", value: 3, amount });
+                }
+                // Ajuste para tus botones "2 to 1" si el texto es ese
+                else if(celdaEsColumna(key)) {
+                     // Lógica adicional si el nombre no es claro, 
+                     // pero idealmente usa data-bet="Columna 1" en el HTML
+                }
             }
         }
         return resultado;
     }
+    
+    function celdaEsColumna(texto) {
+        return texto.includes("2 to 1"); 
+    }
 
+    // --- 5. ANIMACIÓN Y HISTORIAL DETALLADO ---
     let anguloActual = 0;
     function girarRuletaAnimacion(numeroGanador, callback) {
         const duracion = 4000;
         const vueltas = 5;
-        // Animación simple
         const rotacionTotal = anguloActual + (vueltas * 360) + Math.random() * 360;
 
         if(rueda) {
@@ -254,23 +276,35 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const lista = document.getElementById("historial-jugadas");
                 if(!lista) return;
 
-                // Limpiar lista (manteniendo headers si existen en el HTML fuera del UL)
-                // Asumimos que la lista son solo los items nuevos
+                // Limpiar (manteniendo headers si están fuera)
                 lista.innerHTML = ""; 
                 
                 data.forEach((item, idx) => {
                     const li = document.createElement("li");
                     const color = item.netResult >= 0 ? "gain" : "loss";
+                    
+                    // Generar descripción detallada
+                    let desc = "Juego";
+                    if(item.bets && item.bets.length > 0) {
+                        desc = item.bets.map(b => {
+                            let n = b.value;
+                            if(NOMBRES_APUESTAS[b.value]) n = NOMBRES_APUESTAS[b.value];
+                            if(b.type === 'dozen') n = b.value + "ª Doc";
+                            if(b.type === 'column') n = "Col " + b.value;
+                            return n;
+                        }).join(", ");
+                    }
+
                     li.innerHTML = `
                         <span class="h-nro">${idx + 1}</span>
-                        <span class="h-label">Juego</span>
-                        <span class="h-stake">$${item.amountBet}</span>
+                        <span class="h-label" title="${desc}">${desc}</span>
+                        <span class="h-stake">$${item.amountBet.toLocaleString("es-CL")}</span>
                         <span class="h-win">${item.result}</span>
-                        <span class="h-delta ${color}">$${item.netResult}</span>
+                        <span class="h-delta ${color}">$${item.netResult.toLocaleString("es-CL")}</span>
                     `;
                     lista.appendChild(li);
                 });
             }
-        } catch(e) { console.error(e); }
+        } catch(e) {}
     }
 });
