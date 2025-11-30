@@ -1,9 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Obtener saldo inicial del servidor
     await actualizarDatosUsuario();
     await cargarHistorialTransacciones();
 
-    // Eventos UI (Abrir/Cerrar pestañas)
     const contDep = document.getElementById("contenedor-deposito");
     const contRet = document.getElementById("contenedor-retiro");
 
@@ -17,9 +15,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         contRet.classList.remove("oculto");
     });
 
-    // Validaciones visuales (input format) se mantienen igual que tu original...
-    // (Omitido por brevedad, puedes dejar las funciones auxiliares de formato de tu código original)
-    
     // --- LÓGICA DE DEPÓSITO ---
     const formDep = document.getElementById("form-deposito");
     formDep.addEventListener("submit", async (e) => {
@@ -42,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (res.ok) {
                 msgOk.textContent = "Depósito exitoso. Nuevo saldo: $" + data.balance.toLocaleString("es-CL");
                 actualizarDisplaySaldo(data.balance);
-                cargarHistorialTransacciones(); // Refrescar tabla
+                cargarHistorialTransacciones();
                 formDep.reset();
             } else {
                 msgErr.textContent = data.error;

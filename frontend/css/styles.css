@@ -9,11 +9,11 @@
 }
 
 :root {
-  --gold: #F58220;    /* color del logo */
-  --card: #2b2b2b;    /* viñeta oscura */
-  --pill: #e9e9e9;    /* viñeta gris de inputs */
-  --text: #fff;    /* texto claro */
-  --dark: #121212;    /* botón oscuro */
+  --gold: #F58220;
+  --card: #2b2b2b;
+  --pill: #e9e9e9;
+  --text: #fff;
+  --dark: #121212;
 }
 
 html,
@@ -535,9 +535,6 @@ body.login-page {
   font-size: 1rem;
 }
 
-
-/* === Formularios más grandes y legibles === */
-
 .campo-form label {
   font-size: 1.1rem !important;
   font-weight: bold;
@@ -590,7 +587,6 @@ body.login-page {
   box-shadow: 0 12px 30px rgb(0 0 0 / 55%);
 }
 
-/* Datos Personales */
 .profile-grid {
   display: grid;
   grid-template-columns: 200px 1fr;
@@ -1017,14 +1013,12 @@ body.login-page {
   transition: background 0.25s ease, transform 0.08s ease, box-shadow 0.25s ease;
 }
 
-/* cuando hay error (saldo insuficiente, etc.) */
 .saldo-box.saldo-error {
   background: #8b0000 !important;
   box-shadow: 0 0 0 2px rgb(255 0 0 / 35%), 0 8px 20px rgb(0 0 0 / 40%);
   animation: shake 0.6s ease;
 }
 
-/* vibración */
 @keyframes shake {
   0% {
     transform: translateX(0);
@@ -1047,7 +1041,6 @@ body.login-page {
   }
 }
 
-/* pequeña reacción al actualizar saldo */
 .saldo-flash {
   animation: flash 0.3s ease;
 }
@@ -1089,7 +1082,6 @@ body.login-page {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* NUEVO: Ficha seleccionada (resaltado con borde dorado y aumento de tamaño) */
 .chip.selected {
   box-shadow: 0 0 0 4px var(--gold), 0 0 15px rgb(245 130 32 / 80%);
   transform: scale(1.1);
@@ -1101,7 +1093,6 @@ body.login-page {
   transform: none;
 }
 
-/* Estilo de la ficha colocada en el tablero (Clon de la ficha) */
 .placed-chip {
   position: absolute;
   width: 85px;
@@ -1484,8 +1475,6 @@ body.login-page {
 /* =========================================
    ESTILOS VISUALES DEL MONTO EN LA CASILLA
    ========================================= */
-
-/* Aseguramos que la celda sea el contenedor relativo */
 .cell, .num, .zero, .column-cell, .dozens-cell {
     position: relative !important; 
     display: flex;
@@ -1494,43 +1483,41 @@ body.login-page {
     align-items: center;
 }
 
-/* El cuadro de texto dorado en la parte inferior */
 .bet-total-display {
     position: absolute;
     bottom: 0;
+    right: 0;
     left: 0;
     width: 100%;
-    
-    /* Diseño del cuadro */
-    background-color: rgba(0, 0, 0, 0.85); 
+    background: rgb(0 0 0 / 60%);
     border-top: 1px solid #F58220; 
-    color: #F58220;
-    
-    /* Tipografía */
-    font-size: 0.75rem; 
+    color: #fce7b7;
+    font-size: 0.8em;
+    font-weight: 900;
     font-weight: bold;
     text-align: center;
-    padding: 2px 0;
-    
-    /* Bordes redondeados abajo para coincidir con la celda */
-    border-bottom-left-radius: 8px; 
-    border-bottom-right-radius: 8px;
-    
+    padding: 2px 4px;
+    border-radius: 0 8px 8px 8px;
+    line-height: 1;
     pointer-events: none;
-    z-index: 5;
+    z-index: 10;
 }
 
-/* Resaltar la celda cuando tiene apuesta activa */
+.cell.active-bet-cell {
+  box-shadow: 0 0 8px rgb(245 130 32 / 80%), inset 0 0 8px rgb(245 130 32 / 40%);
+  border-color: var(--gold);
+}
+
 .active-bet-cell {
-    box-shadow: inset 0 0 0 1px #F58220, 0 0 10px rgba(245, 130, 32, 0.4);
+    box-shadow: inset 0 0 0 1px #F58220, 0 0 10px rgb(245 130 32 / 40%);
     border-color: #F58220 !important;
 }
 
-/* Ajuste para el historial detallado (para que el texto no se corte feo) */
 .h-label {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: left;
     max-width: 180px;
     display: inline-block;
     vertical-align: middle;
@@ -1567,7 +1554,6 @@ body.login-page {
   font-size: 1.15rem;
 }
 
-/* Encabezados de columna (si se añaden en HTML, sino se aplican a los LI) */
 .bet-history li {
   display: contents;
   font-size: 1.05rem;
@@ -1590,10 +1576,6 @@ body.login-page {
 
 .h-nro {
   text-align: center;
-}
-
-.h-label {
-  text-align: left;
 }
 
 .h-stake {
@@ -1619,7 +1601,6 @@ body.login-page {
   color: #b01c1f;
 }
 
-/* Número ganador */
 .win-badge {
   display: inline-block;
   min-width: 38px;
@@ -1644,7 +1625,6 @@ body.login-page {
   background: #1f7c30;
 }
 
-/* Animaciones (mantengo las que tenías por si las usas) */
 @keyframes pop-green {
   0% {
     transform: scale(0.85);
@@ -1663,32 +1643,4 @@ body.login-page {
   100% {
     transform: scale(1);
   }
-}
-
-
-/* ===================================
-   ESTILOS VISUALES DEL MONTO EN LA CASILLA
-   =================================== */
-
-/* Estilo para el span que muestra el monto total apostado */
-.bet-total-display {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  padding: 2px 4px;
-  font-size: 0.8em;
-  font-weight: 900;
-  color: #fce7b7;
-  background: rgb(0 0 0 / 60%);
-  border-radius: 0 0 8px 8px;
-  line-height: 1;
-  z-index: 10;
-  text-align: center;
-}
-
-/* Estilo para resaltar la casilla cuando tiene una apuesta */
-.cell.active-bet-cell {
-  box-shadow: 0 0 8px rgb(245 130 32 / 80%), inset 0 0 8px rgb(245 130 32 / 40%);
-  border-color: var(--gold);
 }

@@ -8,12 +8,11 @@ const gameRoutes = require("./game");
 
 const { validarToken } = require("../utils/jwt");
 
-// middleware authRequired (para usar en rutas protegidas)
 function authRequired(req, res, next) {
   try {
     const token = req.cookies?.session;
     if (!token) return res.status(401).json({ error: "No autenticado" });
-    req.user = validarToken(token); // usa tu utils/jwt.validarToken
+    req.user = validarToken(token);
     return next();
   } catch (err) {
     return res.status(401).json({ error: "Sesión inválida o expirada" });

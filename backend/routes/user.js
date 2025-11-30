@@ -6,7 +6,6 @@ const router = express.Router();
 const usuarios = mongoose.connection.collection("usuarios");
 const historial = mongoose.connection.collection("historial");
 
-// Middleware Auth
 router.use((req, res, next) => {
   try {
     const token = req.cookies.session;
@@ -39,13 +38,11 @@ router.post("/deposit", async (req, res) => {
 
   const userId = new mongoose.Types.ObjectId(req.user.id);
 
-  // Actualizar saldo
   await usuarios.updateOne(
     { _id: userId },
     { $inc: { balance: amount } }
   );
 
-  // Registrar en historial
   await historial.insertOne({
       userId,
       action: "DEPOSIT",

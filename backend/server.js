@@ -7,7 +7,6 @@ const { connectDB } = require('./utils/db');
 
 const app = express();
 
-// Middleware
 app.use(express.json());
 app.use(cookieParser());
 
@@ -20,7 +19,7 @@ app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
 app.use('/js', express.static(path.join(__dirname, '../frontend/js')));
 app.use('/fotos', express.static(path.join(__dirname, '../frontend/fotos')));
 
-// == Rutas específicas para archivos HTML si no se resuelven automáticamente ==
+// == Rutas específicas para archivos HTML ==
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../frontend/html/index.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, '../frontend/html/login.html')));
 app.get('/registro', (req, res) => res.sendFile(path.join(__dirname, '../frontend/html/registro.html')));
@@ -28,7 +27,7 @@ app.get('/perfil', (req, res) => res.sendFile(path.join(__dirname, '../frontend/
 app.get('/ruleta', (req, res) => res.sendFile(path.join(__dirname, '../frontend/html/ruleta.html')));
 app.get('/transacciones', (req, res) => res.sendFile(path.join(__dirname, '../frontend/html/transacciones.html')));
 
-// == Fallback SPA (Opcional, redirige a index si no encuentra nada) ==
+// == Fallback SPA ==
 app.use((req, res) => {
     if (req.originalUrl.startsWith('/api')) {
         return res.status(404).json({ error: "API endpoint not found" });

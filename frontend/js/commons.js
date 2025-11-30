@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const isProtected = path.includes("perfil") || path.includes("transacciones") || path.includes("ruleta");
     const isAuthPage = path.includes("login") || path.includes("registro");
 
-    // 1. Verificar estado de la sesión
     let user = null;
     try {
         const res = await fetch("/api/user/profile");
@@ -17,15 +16,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Error verificando sesión", e);
     }
 
-    // 2. Actualizar Barra de Navegación
     actualizarNavbar(user);
 
-    // 3. Redirección inversa (si estoy logueado, no debo estar en login/registro)
     if (user && isAuthPage) {
         window.location.href = "perfil.html";
     }
 
-    // 4. Listeners globales
     configurarBotonesGlobales();
 });
 
@@ -33,7 +29,6 @@ function actualizarNavbar(user) {
     const navUl = document.querySelector("nav ul");
     if (!navUl) return;
 
-    // Limpiamos la navegación actual para reconstruirla según estado
     navUl.innerHTML = `
         <li><a href="index.html">Inicio</a></li>
         <li><a href="desarrolladores.html">Sobre Nosotros</a></li>
@@ -41,7 +36,6 @@ function actualizarNavbar(user) {
     `;
 
     if (user) {
-        // Usuario Autenticado
         const liPerfil = document.createElement("li");
         liPerfil.innerHTML = `<a href="perfil.html">Perfil (${user.username})</a>`;
         
@@ -64,7 +58,6 @@ function actualizarNavbar(user) {
         navUl.appendChild(liTrans);
         navUl.appendChild(liLogout);
     } else {
-        // Usuario No Autenticado
         const liLogin = document.createElement("li");
         liLogin.innerHTML = `<a href="login.html">Iniciar Sesión</a>`;
         navUl.appendChild(liLogin);
@@ -72,7 +65,6 @@ function actualizarNavbar(user) {
 }
 
 function configurarBotonesGlobales() {
-    // Botones de la Home
     const btnLoginIndex = document.querySelector(".btn-iniciar-sesion");
     if (btnLoginIndex) btnLoginIndex.addEventListener("click", () => location.href = 'login.html');
 

@@ -6,17 +6,14 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const usuarios = mongoose.connection.collection("usuarios");
 
-// POST /api/auth/register
 router.post("/register", async (req, res) => {
   try {
     const { fullName, email, username, password, birthDate } = req.body;
 
-    // Validación básica
     if (!fullName || !email || !username || !password || !birthDate) {
       return res.status(400).json({ error: "Todos los campos son obligatorios" });
     }
 
-    // Validación de edad
     const nacimiento = new Date(birthDate);
     const hoy = new Date();
     let edad = hoy.getFullYear() - nacimiento.getFullYear();
@@ -26,23 +23,20 @@ router.post("/register", async (req, res) => {
     }
     if (edad < 18) return res.status(400).json({ error: "Debe ser mayor de 18 años" });
 
-    // Unicidad
     const existe = await usuarios.findOne({ 
       $or: [{ email }, { username }] 
     });
     if (existe) return res.status(400).json({ error: "Email o username ya existe" });
 
-    // Hash contraseña
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Crear usuario
     await usuarios.insertOne({
       fullName,
       email,
       username,
       passwordHash,
       birthDate,
-      balance: 0, // Saldo inicial 0
+      balance: 0,
       createdAt: new Date()
     });
 
@@ -64,15 +58,13 @@ router.post("/login", async (req, res) => {
     const ok = await bcrypt.compare(password, user.passwordHash);
     if (!ok) return res.status(400).json({ error: "Credenciales inválidas" });
 
-    // Crear JWT
     const token = crearToken({ id: user._id, username: user.username });
 
-    // Cookie Segura
     res.cookie("session", token, {
       httpOnly: true,
-      secure: true, // Importante para HTTPS en AWS/Nginx
+      secure: true,
       sameSite: "strict",
-      maxAge: 10 * 60 * 1000 // 10 minutos
+      maxAge: 10 * 60 * 1000
     });
 
     res.json({ success: true, username: user.username });

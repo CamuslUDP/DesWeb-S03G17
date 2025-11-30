@@ -7,7 +7,6 @@ const router = express.Router();
 const usuarios = mongoose.connection.collection("usuarios");
 const historial = mongoose.connection.collection("historial");
 
-// Middleware de autenticación local para este router
 router.use((req, res, next) => {
   try {
     const token = req.cookies.session;
@@ -22,12 +21,11 @@ router.use((req, res, next) => {
 // POST /api/game/spin
 router.post("/spin", async (req, res) => {
   try {
-    const bets = req.body.bets; // Array de objetos { type, value, amount }
+    const bets = req.body.bets;
     if (!bets || !Array.isArray(bets) || bets.length === 0) {
       return res.status(400).json({ error: "No hay apuestas válidas" });
     }
 
-    // 1. Calcular total apostado
     let totalApostado = 0;
     for (const b of bets) {
       if (b.amount <= 0) return res.status(400).json({ error: "Monto negativo" });
@@ -36,27 +34,21 @@ router.post("/spin", async (req, res) => {
 
     const userIdObj = new mongoose.Types.ObjectId(req.user.id);
 
-    // 2. Verificar saldo y descontar atómicamente
-    // Buscamos usuario con saldo suficiente
     const user = await usuarios.findOne({ _id: userIdObj });
     
     if (!user || user.balance < totalApostado) {
       return res.status(400).json({ error: "Saldo insuficiente" });
     }
 
-    // Descontamos la apuesta (para asegurar la transacción)
     await usuarios.updateOne(
         { _id: userIdObj },
         { $inc: { balance: -totalApostado } }
     );
 
-    // 3. Generar número aleatorio (SERVER SIDE)
-    const result = Math.floor(Math.random() * 37); // 0-36
+    const result = Math.floor(Math.random() * 37);
 
-    // 4. Calcular ganancia
     let gananciaTotal = 0;
     for (const b of bets) {
-      // Usamos la utilidad de pagos
       const gananciaApuesta = calcularPago({
         type: b.type,
         value: b.value,
@@ -66,7 +58,6 @@ router.post("/spin", async (req, res) => {
       gananciaTotal += gananciaApuesta;
     }
 
-    // 5. Acreditar ganancia (si hubo)
     if (gananciaTotal > 0) {
       await usuarios.updateOne(
         { _id: userIdObj },
@@ -74,7 +65,6 @@ router.post("/spin", async (req, res) => {
       );
     }
 
-    // 6. Registrar en historial
     const nuevoSaldo = (user.balance - totalApostado) + gananciaTotal;
     
     await historial.insertOne({

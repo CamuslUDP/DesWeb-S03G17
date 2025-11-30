@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-// Intentamos leer el secreto desde la config, o usamos uno por defecto
 const config = require("../../commons/configs/site.config.js");
 const SECRET = config.JWT_SECRET || "super-secret-key";
 

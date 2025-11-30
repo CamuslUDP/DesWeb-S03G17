@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Cargar Datos del Perfil
     await cargarDatosPerfil();
     
-    // 2. Cargar Historial de Transacciones
     await cargarHistorialTransacciones();
 });
 
@@ -11,19 +9,15 @@ async function cargarDatosPerfil() {
         const res = await fetch("/api/user/profile");
         if (res.ok) {
             const user = await res.json();
-            
-            // Inyectar datos en el HTML
-            // Asegúrate de que los elementos existan. Si usaste el HTML corregido anterior, deberían estar.
             const elUser = document.querySelector(".username");
             const elFullname = document.querySelector(".fullname");
-            const elEmail = document.getElementById("email-display"); // ID nuevo que agregamos
-            const elDob = document.getElementById("dob-display");     // ID nuevo que agregamos
+            const elEmail = document.getElementById("email-display"); 
+            const elDob = document.getElementById("dob-display");
             const elSaldo = document.getElementById("saldo-perfil");
 
             if(elUser) elUser.textContent = user.username;
             if(elFullname) elFullname.textContent = user.fullName;
             
-            // Usamos innerHTML para mantener el <strong>
             if(elEmail) elEmail.innerHTML = `<strong>Correo electrónico:</strong> ${user.email}`;
             
             if(elDob) {
@@ -50,14 +44,13 @@ async function cargarHistorialTransacciones() {
             const tbody = document.getElementById("ultimos-movimientos");
             if (!tbody) return;
 
-            tbody.innerHTML = ""; // Limpiar "Cargando..."
+            tbody.innerHTML = "";
 
             if (list.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:15px">Sin movimientos recientes</td></tr>';
                 return;
             }
 
-            // Mostrar solo los últimos 5 para el perfil
             list.slice(0, 5).forEach(tx => {
                 const tr = document.createElement("tr");
                 const esIngreso = tx.action === "DEPOSIT";
