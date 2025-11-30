@@ -240,7 +240,6 @@
 
         <button type="button" id="btn-register-submit" class="btn-create">CREAR CUENTA</button>
 
-        <!-- Login -->
         <div class="login-alt">
           <p>¿Ya tienes una cuenta RappiBet?</p>
           <a href="login.html" class="login-link">Inicia sesión</a>
@@ -248,42 +247,7 @@
       </form>
     </section>
   </main>
-<script src="../js/commons.js"></script>
-  <script>
-      document.getElementById("btn-register-submit").addEventListener("click", async () => {
-          const name = document.getElementById("name").value;
-          const username = document.getElementById("username").value;
-          const email = document.getElementById("email").value;
-          const password = document.getElementById("password").value;
-          const confirm = document.getElementById("confirm-password").value;
-          const day = document.getElementById("dob-day").value;
-          const month = document.getElementById("dob-month").value;
-          const year = document.getElementById("dob-year").value;
-          const checkResp = document.getElementById("responsibility-consent").checked;
-
-          if(!checkResp) return alert("Debes aceptar las condiciones.");
-          if(password !== confirm) return alert("Las contraseñas no coinciden.");
-          if(!day || !month || !year) return alert("Fecha inválida.");
-
-          const birthDate = `${year}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`;
-
-          try {
-              const res = await fetch("/api/auth/register", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ fullName: name, username, email, password, birthDate })
-              });
-              const data = await res.json();
-              if(res.ok) {
-                  alert("Registro exitoso. Ahora inicia sesión.");
-                  window.location.href = "login.html";
-              } else {
-                  alert("Error: " + data.error);
-              }
-          } catch(e) {
-              alert("Error de conexión");
-          }
-      });
-  </script>
+  <script src="../js/commons.js"></script>
+  <script src="../js/registro.js"></script>
 </body>
 </html>

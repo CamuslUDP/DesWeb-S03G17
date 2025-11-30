@@ -55,35 +55,6 @@
     </section>
   </main>
   <script src="../js/commons.js"></script>
-  <script>
-    document.getElementById("btn-login-submit").addEventListener("click", async () => {
-        const emailInput = document.getElementById("email").value; // En el HTML el ID es email, pero el label dice email
-        // OJO: tu backend login espera "username", pero el input type email. 
-        // Vamos a asumir que el usuario puede ingresar username en ese campo o modificamos el backend.
-        // El backend actual busca por { username }. Modifiquemos el input para ser coherentes.
-        
-        const password = document.getElementById("password").value;
-        
-        // Asumiendo que el usuario ingresa su USERNAME en el campo (aunque diga email en el label por diseño previo)
-        // O ajusta el HTML para que diga "Usuario".
-        
-        try {
-            const res = await fetch("/api/auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username: emailInput, password }) 
-            });
-            const data = await res.json();
-            
-            if (res.ok) {
-                window.location.href = "perfil.html";
-            } else {
-                alert("Error: " + data.error);
-            }
-        } catch (e) {
-            alert("Error de conexión");
-        }
-    });
-  </script>
+  <script src="../js/login.js"></script>
 </body>
 </html>

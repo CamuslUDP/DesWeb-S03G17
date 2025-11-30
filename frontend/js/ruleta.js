@@ -13,35 +13,41 @@ const COLORES_RULETA = {
 // =======================
 //  STATE GLOBAL
 // =======================
-let saldoDisponible = 0;
+let saldoDisponible = 0; // Se llenará desde el backend
 let chipSeleccionada = null; 
 let chipValue = 0; 
 let girando = false; 
-const apuestas = {}; // Formato local: { "3": 1000, "Rojo": 500 }
+const apuestas = {}; 
 
 document.addEventListener("DOMContentLoaded", async () => {
-    // Carga inicial
+    // 1. Carga inicial de datos REALES desde el servidor
     await actualizarSaldoDesdeServer();
     await cargarHistorialJugadas();
 
     // Referencias DOM
-    const saldoTexto = document.getElementById("saldo-apuestas-texto");
+    const saldoTexto = document.getElementById("saldo-apuestas-texto"); // La "pestañita" del saldo
     const spinBtn = document.getElementById("spin-btn");
     const limpiarBtn = document.getElementById("limpiar-apuestas");
     const chips = document.querySelectorAll(".chip");
     const cells = document.querySelectorAll(".board .cell, .board .num .cell");
     const rueda = document.querySelector(".wheel-inner");
 
-    // --- FUNCIONES SALDO ---
+    // --- FUNCIONES SALDO (Backend Connection) ---
     async function actualizarSaldoDesdeServer() {
         try {
+            // Petición al endpoint de perfil para obtener el saldo real
             const res = await fetch("/api/user/profile");
             if(res.ok) {
                 const data = await res.json();
-                saldoDisponible = data.balance - calcularTotalMesa(); // Saldo real menos lo puesto en mesa
+                // El saldo disponible para apostar es el saldo total menos lo que ya pusiste en la mesa
+                saldoDisponible = data.balance - calcularTotalMesa(); 
                 actualizarDisplaySaldo();
+            } else {
+                console.error("Error obteniendo saldo");
             }
-        } catch(e) { console.error(e); }
+        } catch(e) { 
+            console.error("Error de conexión al obtener saldo", e); 
+        }
     }
 
     function calcularTotalMesa() {
@@ -49,7 +55,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function actualizarDisplaySaldo() {
-        saldoTexto.textContent = "$" + saldoDisponible.toLocaleString("es-CL");
+        if(saldoTexto) {
+            saldoTexto.textContent = "$" + saldoDisponible.toLocaleString("es-CL");
+        }
     }
 
     // --- INTERACCIÓN FICHAS ---
@@ -79,19 +87,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             
             // Lógica local visual
             apuestas[betName] = (apuestas[betName] || 0) + chipValue;
+            
+            // Actualizamos el saldo visual restando la ficha recién puesta
             saldoDisponible -= chipValue;
+            
             actualizarDisplaySaldo();
             actualizarApuestasActivasDisplay();
             celda.classList.add('active-bet-cell'); // Visual
         });
         
-        // Click derecho para quitar (opcional, simplificado aquí)
+        // Click derecho para quitar apuesta
         celda.addEventListener("contextmenu", e => {
             e.preventDefault();
             if(girando) return;
             const betName = celda.dataset.bet || celda.textContent.trim();
             if(apuestas[betName]) {
-                saldoDisponible += apuestas[betName];
+                saldoDisponible += apuestas[betName]; // Devolver al saldo visual
                 delete apuestas[betName];
                 actualizarDisplaySaldo();
                 actualizarApuestasActivasDisplay();
@@ -102,6 +113,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function actualizarApuestasActivasDisplay() {
         const list = document.getElementById("apuestas-activas-list");
+        if(!list) return;
         list.innerHTML = "";
         Object.keys(apuestas).forEach(k => {
             const li = document.createElement("li");
@@ -112,9 +124,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     limpiarBtn.addEventListener("click", () => {
         if(girando) return;
+        // Borrar todas las apuestas locales
         for (const k in apuestas) delete apuestas[k];
+        
+        // Limpiar visualmente
         cells.forEach(c => c.classList.remove('active-bet-cell'));
-        actualizarSaldoDesdeServer(); // Restaurar saldo real
+        
+        // Restaurar el saldo trayendo el dato fresco del servidor
+        actualizarSaldoDesdeServer(); 
         actualizarApuestasActivasDisplay();
     });
 
@@ -128,12 +145,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         spinBtn.disabled = true;
         limpiarBtn.disabled = true;
 
-        // 1. Convertir formato de apuestas para el Backend
-        // El backend game.js espera array: [{type, value, amount}]
         const betsArray = transformarApuestasParaBackend(apuestas);
 
         try {
-            // 2. Llamada a la API
             const res = await fetch("/api/game/spin", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -149,12 +163,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return;
             }
 
-            // 3. Iniciar Animación
+            // Iniciar Animación
             girarRuletaAnimacion(data.result, () => {
-                saldoDisponible = data.balance;
+                // Al terminar:
+                // 1. El servidor ya calculó el nuevo saldo, actualizamos la variable local
+                saldoDisponible = data.balance; 
                 actualizarDisplaySaldo();
                 
-                // Reset mesa
+                // 2. Limpiamos la mesa
                 for (const k in apuestas) delete apuestas[k];
                 cells.forEach(c => c.classList.remove('active-bet-cell'));
                 actualizarApuestasActivasDisplay();
@@ -174,14 +190,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             limpiarBtn.disabled = false;
         }
     });
+    
+    // --- HELPERS Y UTILIDADES ---
 
     function transformarApuestasParaBackend(apuestasLocales) {
         const resultado = [];
         for(const [key, amount] of Object.entries(apuestasLocales)) {
-            // Lógica para mapear nombres visuales a tipos de backend
-            // Ej: "Rojo" -> type: "color", value: "red"
-            // Ej: "17" -> type: "straight", value: 17
-            
             if(!isNaN(Number(key))) {
                 resultado.push({ type: "straight", value: Number(key), amount });
             } else if(key === "Rojo") {
@@ -213,23 +227,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         return resultado;
     }
 
-    // Animación visual (simplificada para caer en el número objetivo)
     let anguloActual = 0;
     function girarRuletaAnimacion(numeroGanador, callback) {
-        // Mapeo simple de número a ángulo (aprox)
-        // La ruleta.png tiene el 0 arriba. Orden horario estándar.
-        // Necesitamos un mapa exacto de ángulos o una aproximación visual.
-        // Para efectos académicos, usaremos un cálculo aleatorio visual + delay, 
-        // luego forzamos la rotación final al ángulo correcto o simplemente mostramos el resultado.
-        
-        // Dado que calcular el ángulo exacto de la imagen PNG requiere conocer el mapeo exacto:
         const duracion = 4000;
         const vueltas = 5;
-        // Ángulo dummy para efecto visual
+        // Animación simple
         const rotacionTotal = anguloActual + (vueltas * 360) + Math.random() * 360;
 
-        rueda.style.transition = `transform ${duracion}ms cubic-bezier(0.25, 1, 0.5, 1)`;
-        rueda.style.transform = `translate(-50%, calc(-50% - 6px)) rotate(${rotacionTotal}deg)`;
+        if(rueda) {
+            rueda.style.transition = `transform ${duracion}ms cubic-bezier(0.25, 1, 0.5, 1)`;
+            rueda.style.transform = `translate(-50%, calc(-50% - 6px)) rotate(${rotacionTotal}deg)`;
+        }
 
         setTimeout(() => {
             alert(`¡Salió el número ${numeroGanador}!`);
@@ -244,17 +252,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             if(res.ok) {
                 const data = await res.json();
                 const lista = document.getElementById("historial-jugadas");
-                // Limpiar lista (manteniendo headers)
-                // ... implementación simple de renderizado ...
-                // Nota: Tu HTML tiene headers como <span> dentro del <ul>. Es mejor limpiar los <li> siguientes.
-                while(lista.children.length > 5) lista.removeChild(lista.lastChild);
+                if(!lista) return;
+
+                // Limpiar lista (manteniendo headers si existen en el HTML fuera del UL)
+                // Asumimos que la lista son solo los items nuevos
+                lista.innerHTML = ""; 
                 
                 data.forEach((item, idx) => {
                     const li = document.createElement("li");
                     const color = item.netResult >= 0 ? "gain" : "loss";
                     li.innerHTML = `
                         <span class="h-nro">${idx + 1}</span>
-                        <span class="h-label">Apuesta múltiple</span>
+                        <span class="h-label">Juego</span>
                         <span class="h-stake">$${item.amountBet}</span>
                         <span class="h-win">${item.result}</span>
                         <span class="h-delta ${color}">$${item.netResult}</span>

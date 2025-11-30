@@ -28,17 +28,17 @@
   <main class="profile-wrap">
     <section class="profile-card">
 
-      <!---------------- PERFIL ---------------->
       <div class="profile-grid">
         <div class="profile-photo">
           <img src="../fotos/user.jpg" alt="Usuario" />
         </div>
 
         <div class="profile-data">
-          <h1 class="username">NombreDeUsuario123</h1>
-          <p class="fullname">Juan Carlos Pérez Soto</p>
-          <p><strong>Correo electrónico:</strong> usuario@gmail.com</p>
-          <p><strong>Fecha de nacimiento:</strong> 01/01/2001</p>
+          <h1 class="username">Cargando...</h1>
+          <p class="fullname">...</p>
+          
+          <p id="email-display"><strong>Correo electrónico:</strong> ...</p>
+          <p id="dob-display"><strong>Fecha de nacimiento:</strong> ...</p>
         </div>
       </div>
 
@@ -46,10 +46,9 @@
         <a class="btn-ruleta" href="ruleta.html">Tirar la ruleta</a>
       </div>
 
-      <!---------------- SALDO + HISTORIAL REAL ---------------->
       <div class="balance-and-history">
 
-        <h2 id="saldo-perfil" class="txt-saldo">Saldo actual: $0 CLP</h2>
+        <h2 id="saldo-perfil" class="txt-saldo">Saldo actual: Cargando...</h2>
 
         <table class="tx-table" aria-label="Últimas 5 transacciones">
           <thead>
@@ -61,8 +60,7 @@
           </thead>
 
           <tbody id="ultimos-movimientos">
-            <!-- Se llena automáticamente con JS -->
-          </tbody>
+            </tbody>
         </table>
 
         <div class="tx-more">
@@ -73,56 +71,6 @@
     </section>
   </main>
   <script src="../js/commons.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", async () => {
-        try {
-            // 1. Obtener Perfil
-            const res = await fetch("/api/user/profile");
-            if (res.ok) {
-                const user = await res.json();
-                
-                // Llenar datos
-                document.querySelector(".username").textContent = user.username;
-                document.querySelector(".fullname").textContent = user.fullName;
-                // Busca los párrafos por contenido (o agrega IDs mejor)
-                const ps = document.querySelectorAll(".profile-data p");
-                ps[1].innerHTML = `<strong>Correo electrónico:</strong> ${user.email}`;
-                ps[2].innerHTML = `<strong>Fecha de nacimiento:</strong> ${user.birthDate.split("T")[0]}`;
-                
-                document.getElementById("saldo-perfil").textContent = "Saldo actual: $" + user.balance.toLocaleString("es-CL") + " CLP";
-            }
-
-            // 2. Obtener Historial (Juegos y Transacciones mezclados o solo transacciones, según prefieras)
-            // Aquí pediremos las transacciones
-            const resHist = await fetch("/api/user/transactions");
-            if(resHist.ok) {
-                const list = await resHist.json();
-                const tabla = document.getElementById("ultimos-movimientos");
-                tabla.innerHTML = "";
-                
-                list.slice(0, 5).forEach(item => {
-                    const tr = document.createElement("tr");
-                    const dateStr = new Date(item.date).toLocaleDateString("es-CL");
-                    const isIngreso = item.action === "DEPOSIT";
-                    const tipo = isIngreso ? "Ingreso" : "Retiro";
-                    
-                    tr.classList.add(isIngreso ? "ingreso" : "retiro");
-                    tr.innerHTML = `
-                        <td class="text-left">${dateStr}</td>
-                        <td class="text-center">${tipo}</td>
-                        <td class="text-right amount">
-                            ${isIngreso ? "+ $" : "- $"} ${Math.abs(item.amount).toLocaleString("es-CL")}
-                        </td>
-                    `;
-                    tabla.appendChild(tr);
-                });
-            }
-
-        } catch(e) {
-            console.error("Error cargando perfil", e);
-        }
-    });
-</script>
-
+  <script src="../js/perfil.js"></script>
 </body>
 </html>
