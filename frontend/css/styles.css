@@ -1497,7 +1497,7 @@ body.login-page {
     font-weight: bold;
     text-align: center;
     padding: 2px 4px;
-    border-radius: 0 8px 8px 8px;
+    border-radius: 0 8px 8px;
     line-height: 1;
     pointer-events: none;
     z-index: 10;
