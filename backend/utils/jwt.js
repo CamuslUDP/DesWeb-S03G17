@@ -1,8 +1,10 @@
 const jwt = require("jsonwebtoken");
-
-const SECRET = "CAMBIAR_ESTE_VALOR";
+// Intentamos leer el secreto desde la config, o usamos uno por defecto
+const config = require("../../commons/configs/site.config.js");
+const SECRET = config.JWT_SECRET || "super-secret-key";
 
 function crearToken(datos) {
+  // Expiración de 10 minutos requerida
   return jwt.sign(datos, SECRET, { expiresIn: "10m" });
 }
 

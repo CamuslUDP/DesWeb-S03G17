@@ -1,19 +1,18 @@
 // =====================================================
-//  SISTEMA DE PAGO RULETA – COMPATIBLE CON game.js
+//  SISTEMA DE PAGO RULETA
 // =====================================================
 
-// Conversión de números rojos / negros según ruleta europea
+// Números rojos según ruleta europea
 const ROJO = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
-const NEGRO = [2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35];
 
 function colorDeNumero(n) {
   if (n === 0) return "green";
   return ROJO.includes(n) ? "red" : "black";
 }
 
-// Tabla de pagos estándar europea
+// Tabla de pagos
 const PAYOUTS = {
-  straight: 35,   // Pleno (número directo)
+  straight: 35,   // Pleno
   color: 1,       // Rojo / Negro
   evenodd: 1,     // Par / Impar
   range: 1,       // 1-18 / 19-36
@@ -21,36 +20,27 @@ const PAYOUTS = {
   column: 2       // Columnas
 };
 
-// =====================================================
-//  CALCULAR PAGO DE UNA APUESTA
-// =====================================================
-
 function calcularPago({ type, value, amount, result }) {
   if (!amount || amount <= 0) return 0;
 
   const num = result;
   const color = colorDeNumero(num);
 
-  // ============================
-  //  PLENO (straight)
-  // ============================
+  // Pleno (Número específico)
   if (type === "straight") {
     return num === value ? amount * PAYOUTS.straight : 0;
   }
 
-  // ============================
-  //  COLOR (red / black)
-  // ============================
+  // Color (red / black)
   if (type === "color") {
+    // Si sale 0, pierden las apuestas de color
     if (num !== 0 && value === color) {
       return amount * PAYOUTS.color;
     }
     return 0;
   }
 
-  // ============================
-  //  PAR / IMPAR
-  // ============================
+  // Par / Impar
   if (type === "evenodd") {
     if (num === 0) return 0;
     const esPar = num % 2 === 0;
@@ -60,9 +50,7 @@ function calcularPago({ type, value, amount, result }) {
     return 0;
   }
 
-  // ============================
-  //  1-18 / 19-36
-  // ============================
+  // 1-18 / 19-36
   if (type === "range") {
     if (num === 0) return 0;
     if (value === "low" && num <= 18) return amount * PAYOUTS.range;
@@ -70,9 +58,7 @@ function calcularPago({ type, value, amount, result }) {
     return 0;
   }
 
-  // ============================
-  //  DOCENAS
-  // ============================
+  // Docenas (1, 2, 3)
   if (type === "dozen") {
     if (num >= 1 && num <= 12 && value === 1) return amount * PAYOUTS.dozen;
     if (num >= 13 && num <= 24 && value === 2) return amount * PAYOUTS.dozen;
@@ -80,13 +66,16 @@ function calcularPago({ type, value, amount, result }) {
     return 0;
   }
 
-  // ============================
-  //  COLUMNAS
-  // ============================
+  // Columnas (1, 2, 3)
   if (type === "column") {
     if (num === 0) return 0;
-    const column = (num - 1) % 3 + 1; // 1,2,3
-    if (column === value) return amount * PAYOUTS.column;
+    // Columna 1: 1, 4, 7... (n%3 === 1)
+    // Columna 2: 2, 5, 8... (n%3 === 2)
+    // Columna 3: 3, 6, 9... (n%3 === 0)
+    let colNum = num % 3;
+    if (colNum === 0) colNum = 3;
+    
+    if (colNum === value) return amount * PAYOUTS.column;
     return 0;
   }
 
